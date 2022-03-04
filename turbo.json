@@ -1,0 +1,23 @@
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".nuxt/**"
+      ]
+    },
+    "test": {},
+    "typecheck": {},
+    "lint": {},
+    "lint:fix": {},
+    "dev": {
+      "cache": false
+    }
+  },
+  "globalDependencies": [
+    "tsconfig.base.json"
+  ]
+}
