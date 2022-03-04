@@ -1,0 +1,4 @@
+[35m@fellwork/prettier-config:build: [0mcache hit, replaying output [2m6fb44c7cc2e4963d[0m
+[35m@fellwork/prettier-config:build: [0m[36m
+[35m@fellwork/prettier-config:build: [0m[1msrc/index.ts[22m → [1mdist/index.js[22m...[39m
+[35m@fellwork/prettier-config:build: [0m[32mcreated [1mdist/index.js[22m in [1m56ms[22m[39m

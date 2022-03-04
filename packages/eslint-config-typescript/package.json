@@ -1,11 +1,10 @@
 {
-  "name": "@fellwork/eslint-config-core",
+  "name": "@fellwork/eslint-config-typescript",
   "version": "0.0.0",
-  "description": "Shareable ESLint JS, YML, and JSON configuration",
+  "description": "Shareable ESLint TS configuration",
   "keywords": [
     "Javascript",
-    "YML",
-    "JSON",
+    "TypeScript",
     "ESLint",
     "config"
   ],
@@ -35,6 +34,7 @@
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
+    "@fellwork/eslint-config-core": "workspace:^",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "eslint-config-prettier": "8.5.0",
