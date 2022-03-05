@@ -1,31 +1,39 @@
+import __esbuild from 'rollup-plugin-esbuild'
 import dts from 'rollup-plugin-dts'
-import esbuild from 'rollup-plugin-esbuild'
+import pkg from './package.json'
 
-const name = require('./package.json').main.replace(/\.js$/, '')
+const external = ['path', ...Object.keys(pkg.dependencies), /\.json$/]
 
-const bundle = (config) => ({
-  ...config,
-  input: 'src/index.ts',
-  external: (id) => !/^[./]/.test(id),
-})
+const esbuild = () =>
+  __esbuild({
+    target: 'esnext',
+    module: 'esnext',
+  })
 
 export default [
-  bundle({
-    plugins: [esbuild()],
+  {
+    external,
+    input: 'src/index.ts',
     output: [
       {
-        file: `${name}.js`,
+        file: pkg.main,
         format: 'cjs',
-        sourcemap: true,
+        exports: 'auto',
+      },
+      {
+        file: pkg.module,
+        format: 'es',
         exports: 'auto',
       },
     ],
-  }),
-  bundle({
-    plugins: [dts()],
+    plugins: [esbuild()],
+  },
+  {
+    input: '.cache/index.d.ts',
     output: {
-      file: `${name}.d.ts`,
+      file: pkg.types,
       format: 'es',
     },
-  }),
+    plugins: [dts()],
+  },
 ]

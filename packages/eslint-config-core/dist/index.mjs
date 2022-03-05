@@ -1,5 +1,3 @@
-'use strict';
-
 const rules = {
   curly: "off",
   "lines-around-comment": "off",
@@ -461,4 +459,4 @@ var index = {
   }
 };
 
-module.exports = index;
+export { index as default };
