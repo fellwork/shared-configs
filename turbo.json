@@ -1,8 +1,12 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     },
     "clean": {},
     "test": {},
@@ -13,6 +17,8 @@
       "cache": false
     }
   },
-  "globalDependencies": ["tsconfig.base.json"],
-  "npmClient": "yarn"
+  "globalDependencies": [
+    "tsconfig.base.json"
+  ],
+  "npmClient": "pnpm"
 }

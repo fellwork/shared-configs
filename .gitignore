@@ -18,6 +18,7 @@ dist
 *.log
 .env
 .cache
+**/.turbo
 **/dist/**
 **/build/**
 **/node_modules/**

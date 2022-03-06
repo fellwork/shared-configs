@@ -1,1 +1,8 @@
-"@fellwork/prettier-config"
+{
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "ignore",
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+}

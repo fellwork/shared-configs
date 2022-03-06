@@ -1,1 +1,0 @@
-# @fellwork/shared-configs

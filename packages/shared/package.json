@@ -1,9 +1,8 @@
 {
-  "name": "shared",
+  "name": "@fellwork/shared",
   "version": "0.0.0",
   "description": "Shared functions",
   "type": "module",
-  "packageManager": "yarn@3.2.0",
   "scripts": {
     "build": "tsup",
     "watch": "tsup -w"
@@ -17,16 +16,7 @@
     "type-fest": "^2.12.0",
     "typescript": "^4.6.0"
   },
-  "tsup": {
-    "dts": true,
-    "entry": [
-      "./src/index.ts"
-    ],
-    "format": [
-      "cjs",
-      "esm"
-    ],
-    "target": "node12",
-    "clean": true
+  "publishConfig": {
+    "access": "public"
   }
 }
