@@ -1,4 +1,8 @@
-[32m@fellwork/prettier-config:build: [0mcache hit, replaying output [2m736441abd851f6ff[0m
+[32m@fellwork/prettier-config:build: [0mcache hit, replaying output [2mfa6ac93e899cc60b[0m
+[32m@fellwork/prettier-config:build: [0m
+[32m@fellwork/prettier-config:build: [0m> @fellwork/prettier-config@1.0.0 build D:\dev\fellwork\shared-configs\packages\prettier-config
+[32m@fellwork/prettier-config:build: [0m> tsup
+[32m@fellwork/prettier-config:build: [0m
 [32m@fellwork/prettier-config:build: [0m[34mCLI[39m Building entry: src/index.ts
 [32m@fellwork/prettier-config:build: [0m[34mCLI[39m Using tsconfig: tsconfig.json
 [32m@fellwork/prettier-config:build: [0m[34mCLI[39m tsup v5.11.13
@@ -6,13 +10,13 @@
 [32m@fellwork/prettier-config:build: [0m[34mCLI[39m Target: node12
 [32m@fellwork/prettier-config:build: [0m[34mCJS[39m Build start
 [32m@fellwork/prettier-config:build: [0m
-[32m@fellwork/prettier-config:build: [0mD:\dev\fellwork\shared-configs\node_modules\tsup\assets\cjs_shims.js
-[32m@fellwork/prettier-config:build: [0m  0:0  warning  File ignored because of a matching ignore pattern. Use "--no-ignore" to override
+[32m@fellwork/prettier-config:build: [0mD:\dev\fellwork\shared-configs\node_modules\.pnpm\tsup@5.11.13_typescript@4.6.2\node_modules\tsup\assets\cjs_shims.js
+[32m@fellwork/prettier-config:build: [0m  0:0  warning  File ignored by default.  Use a negated ignore pattern (like "--ignore-pattern '!<relative/path/to/filename>'") to override
 [32m@fellwork/prettier-config:build: [0m
 [32m@fellwork/prettier-config:build: [0m✖ 1 problem (0 errors, 1 warning)
 [32m@fellwork/prettier-config:build: [0m
 [32m@fellwork/prettier-config:build: [0m[34mDTS[39m Build start
-[32m@fellwork/prettier-config:build: [0m[32mDTS[39m ⚡️ Build success in 1737ms
+[32m@fellwork/prettier-config:build: [0m[32mDTS[39m ⚡️ Build success in 1751ms
 [32m@fellwork/prettier-config:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m230.00 B[39m
-[32m@fellwork/prettier-config:build: [0m[32mCJS[39m ⚡️ Build success in 6460ms
+[32m@fellwork/prettier-config:build: [0m[32mCJS[39m ⚡️ Build success in 8140ms
 [32m@fellwork/prettier-config:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m206.00 B[39m

@@ -1,5 +1,9 @@
-[34m@fellwork/eslint-config-typescript:build: [0mcache hit, replaying output [2mb32e4778cd9b6b8c[0m
-[34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m Building entry: src/index.ts, src/core-lint.ts
+[34m@fellwork/eslint-config-typescript:build: [0mcache hit, replaying output [2m01211abe76c29cf2[0m
+[34m@fellwork/eslint-config-typescript:build: [0m
+[34m@fellwork/eslint-config-typescript:build: [0m> @fellwork/eslint-config-typescript@1.0.0 build D:\dev\fellwork\shared-configs\packages\eslint-config-typescript
+[34m@fellwork/eslint-config-typescript:build: [0m> tsup
+[34m@fellwork/eslint-config-typescript:build: [0m
+[34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m Building entry: src/index.ts
 [34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m Using tsconfig: tsconfig.json
 [34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m tsup v5.11.13
 [34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m Using tsup config: D:\dev\fellwork\shared-configs\packages\eslint-config-typescript\tsup.config.ts
@@ -7,15 +11,13 @@
 [34m@fellwork/eslint-config-typescript:build: [0m[34mCLI[39m Cleaning output folder
 [34m@fellwork/eslint-config-typescript:build: [0m[34mCJS[39m Build start
 [34m@fellwork/eslint-config-typescript:build: [0m
-[34m@fellwork/eslint-config-typescript:build: [0mD:\dev\fellwork\shared-configs\node_modules\tsup\assets\cjs_shims.js
-[34m@fellwork/eslint-config-typescript:build: [0m  0:0  warning  File ignored because of a matching ignore pattern. Use "--no-ignore" to override
+[34m@fellwork/eslint-config-typescript:build: [0mD:\dev\fellwork\shared-configs\node_modules\.pnpm\tsup@5.11.13_typescript@4.6.2\node_modules\tsup\assets\cjs_shims.js
+[34m@fellwork/eslint-config-typescript:build: [0m  0:0  warning  File ignored by default.  Use a negated ignore pattern (like "--ignore-pattern '!<relative/path/to/filename>'") to override
 [34m@fellwork/eslint-config-typescript:build: [0m
 [34m@fellwork/eslint-config-typescript:build: [0m✖ 1 problem (0 errors, 1 warning)
 [34m@fellwork/eslint-config-typescript:build: [0m
 [34m@fellwork/eslint-config-typescript:build: [0m[34mDTS[39m Build start
-[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m ⚡️ Build success in 2389ms
-[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m [1mdist\index.d.ts     [22m[32m122.00 B[39m
-[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m [1mdist\core-lint.d.ts [22m[32m122.00 B[39m
-[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m ⚡️ Build success in 4515ms
-[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m [1mdist\core-lint.js [22m[32m13.88 KB[39m
-[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m [1mdist\index.js     [22m[32m3.76 KB[39m
+[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m ⚡️ Build success in 1813ms
+[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m122.00 B[39m
+[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m ⚡️ Build success in 5171ms
+[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m2.89 KB[39m

@@ -1,5 +1,7 @@
 {
-  "exclude": ["node_modules", "**/*/dist", ".yarn/**"],
+  "extends": "./tsconfig.json",
+  "include": ["packages", "scripts", "tooling"],
+  "exclude": ["**/node_modules", "**/*/dist", ".husky/**"],
   "compilerOptions": {
     // Disable emitting file from a compilation.
     // We'll use esbuild to compile our TypeScript files to JavaScript, so we

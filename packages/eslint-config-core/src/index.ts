@@ -10,7 +10,11 @@ const config = {
     es6: true,
     node: true,
   },
-  extends: ['plugin:jsonc/recommended-with-jsonc', 'plugin:yml/standard'],
+  extends: [
+    'plugin:jsonc/recommended-with-jsonc',
+    'plugin:yml/standard',
+    'plugin:prettier/recommended',
+  ],
   ignorePatterns: ['**/node_modules/**', '**/dist/**', '**/build/**'],
   overrides: [
     {
