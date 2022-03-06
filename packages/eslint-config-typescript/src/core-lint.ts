@@ -1,5 +1,7 @@
-// src/core-lint.ts
+import type { Linter } from 'eslint'
+
 require('@rushstack/eslint-patch/modern-module-resolution')
+
 const config = {
   env: {
     browser: true,
@@ -505,5 +507,6 @@ const config = {
       node: { extensions: ['.js', '.mjs', '.ts', '.d.ts'] },
     },
   },
-}
-module.exports = config
+} as Linter.Config
+
+export = config

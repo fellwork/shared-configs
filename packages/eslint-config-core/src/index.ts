@@ -1,39 +1,36 @@
 import type { Linter } from 'eslint'
 import stdModifiedRules from './rules/std-modified'
 
-export default {
+require('@rushstack/eslint-patch/modern-module-resolution')
+
+const config = {
   env: {
-    es6: true,
-    es2021: true,
     browser: true,
+    es2021: true,
+    es6: true,
     node: true,
   },
   extends: ['plugin:jsonc/recommended-with-jsonc', 'plugin:yml/standard'],
-  plugins: ['html', 'import', 'n', 'promise', 'unicorn'],
-  settings: {
-    'import/resolver': {
-      node: { extensions: ['.js', '.mjs', '.ts', '.d.ts'] },
-    },
-  },
+  ignorePatterns: ['**/node_modules/**', '**/dist/**', '**/build/**'],
   overrides: [
     {
+      env: {
+        browser: true,
+        node: true,
+      },
       files: ['*.js'],
       parser: '@babel/eslint-parser',
       parserOptions: {
         requireConfigFile: false,
-      },
-      env: {
-        browser: true,
-        node: true,
       },
     },
     {
       files: ['*.json', '*.json5'],
       parser: 'jsonc-eslint-parser',
       rules: {
-        quotes: ['error', 'double'],
-        'quote-props': ['error', 'always'],
         'comma-dangle': ['error', 'never'],
+        'quote-props': ['error', 'always'],
+        quotes: ['error', 'double'],
       },
     },
     {
@@ -47,7 +44,6 @@ export default {
         'jsonc/sort-keys': [
           'error',
           {
-            pathPattern: '^$',
             order: [
               'name',
               'version',
@@ -73,11 +69,13 @@ export default {
               'devDependencies',
               'eslintConfig',
               'prettier',
+              'tsup',
             ],
+            pathPattern: '^$',
           },
           {
-            pathPattern: '^(?:dev|peer|optional|bundled)?[Dd]ependencies$',
             order: { type: 'asc' },
+            pathPattern: '^(?:dev|peer|optional|bundled)?[Dd]ependencies$',
           },
         ],
       },
@@ -101,18 +99,20 @@ export default {
       },
     },
   ],
+  plugins: ['html', 'import', 'n', 'promise', 'sort-keys', 'unicorn'],
   rules: {
     ...stdModifiedRules,
+    'eslint-comments/disable-enable-pair': 'off',
     'import/export': 'error',
     'import/first': 'error',
+    'import/no-absolute-path': 'off',
     'import/no-duplicates': 'error',
+    'import/no-mutable-exports': 'error',
+    'import/no-named-as-default-member': 'off',
     'import/no-named-default': 'error',
+    'import/no-unresolved': 'off',
     'import/no-webpack-loader-syntax': 'error',
     'import/order': 'error',
-    'import/no-mutable-exports': 'error',
-    'import/no-unresolved': 'off',
-    'import/no-absolute-path': 'off',
-    'import/no-named-as-default-member': 'off',
     'n/handle-callback-err': ['error', '^(err|error)$'],
     'n/no-callback-literal': 'error',
     'n/no-deprecated-api': 'error',
@@ -121,6 +121,7 @@ export default {
     'n/no-path-concat': 'error',
     'n/process-exit-as-throw': 'error',
     'promise/param-names': 'error',
+    'sort-keys/sort-keys-fix': 'warn',
     'unicorn/error-message': 'error',
     'unicorn/escape-case': 'error',
     'unicorn/no-array-instanceof': 'error',
@@ -133,6 +134,12 @@ export default {
     'unicorn/prefer-text-content': 'error',
     'unicorn/prefer-type-error': 'error',
     'unicorn/throw-new-error': 'error',
-    'eslint-comments/disable-enable-pair': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: { extensions: ['.js', '.mjs', '.ts', '.d.ts'] },
+    },
   },
 } as Linter.Config
+
+export = config

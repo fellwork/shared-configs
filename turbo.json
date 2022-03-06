@@ -1,14 +1,10 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".nuxt/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
+    "clean": {},
     "test": {},
     "typecheck": {},
     "lint": {},
@@ -17,7 +13,6 @@
       "cache": false
     }
   },
-  "globalDependencies": [
-    "tsconfig.base.json"
-  ]
+  "globalDependencies": ["tsconfig.base.json"],
+  "npmClient": "yarn"
 }

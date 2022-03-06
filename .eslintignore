@@ -1,0 +1,5 @@
+**/dist
+dist
+.yarn
+.vscode
+.history

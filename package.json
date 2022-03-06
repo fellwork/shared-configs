@@ -7,16 +7,14 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "lint": "npx eslint . --ext .js,.ts,.json,.yml,.yaml --fix",
+    "test": "turbo run test"
   },
   "dependencies": {
     "esbuild": "^0.14.25",
     "esbuild-runner": "^2.2.1",
     "turbo": "latest",
     "ultra-runner": "^3.10.5"
-  },
-  "devDependencies": {
-    "@fellwork/eslint-config-typescript": "workspace:^",
-    "@fellwork/prettier-config": "workspace:^"
   }
 }

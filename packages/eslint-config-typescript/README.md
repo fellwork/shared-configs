@@ -1,1 +1,0 @@
-# @fellwork/eslint-config-typescript

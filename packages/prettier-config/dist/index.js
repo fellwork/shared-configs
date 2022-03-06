@@ -1,6 +1,5 @@
-'use strict';
-
-const config = {
+// src/index.ts
+var config = {
   arrowParens: "always",
   bracketSpacing: true,
   htmlWhitespaceSensitivity: "ignore",
@@ -8,6 +7,4 @@ const config = {
   singleQuote: true,
   trailingComma: "all"
 };
-
 module.exports = config;
-//# sourceMappingURL=index.js.map

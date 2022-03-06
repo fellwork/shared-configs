@@ -10,5 +10,14 @@
 .yarn/cache
 #.pnp.*
 
-**/node_modules/**
+node_modules
 .history
+build
+.turbo
+dist
+*.log
+.env
+.cache
+**/dist/**
+**/build/**
+**/node_modules/**
