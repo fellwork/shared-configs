@@ -1,23 +1,23 @@
-[32m@fellwork/eslint-config-core:build: [0mcache hit, replaying output [2me2cd245c064a8744[0m
-[32m@fellwork/eslint-config-core:build: [0m
-[32m@fellwork/eslint-config-core:build: [0m> @fellwork/eslint-config-core@1.0.0 build D:\dev\fellwork\shared-configs\packages\eslint-config-core
-[32m@fellwork/eslint-config-core:build: [0m> tsup
-[32m@fellwork/eslint-config-core:build: [0m
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Building entry: src/index.ts
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Using tsconfig: tsconfig.json
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m tsup v5.11.13
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Using tsup config: D:\dev\fellwork\shared-configs\packages\eslint-config-core\tsup.config.ts
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Target: node12
-[32m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Cleaning output folder
-[32m@fellwork/eslint-config-core:build: [0m[34mCJS[39m Build start
-[32m@fellwork/eslint-config-core:build: [0m
-[32m@fellwork/eslint-config-core:build: [0mD:\dev\fellwork\shared-configs\node_modules\.pnpm\tsup@5.11.13_typescript@4.6.2\node_modules\tsup\assets\cjs_shims.js
-[32m@fellwork/eslint-config-core:build: [0m  0:0  warning  File ignored by default.  Use a negated ignore pattern (like "--ignore-pattern '!<relative/path/to/filename>'") to override
-[32m@fellwork/eslint-config-core:build: [0m
-[32m@fellwork/eslint-config-core:build: [0m✖ 1 problem (0 errors, 1 warning)
-[32m@fellwork/eslint-config-core:build: [0m
-[32m@fellwork/eslint-config-core:build: [0m[34mDTS[39m Build start
-[32m@fellwork/eslint-config-core:build: [0m[32mDTS[39m ⚡️ Build success in 1817ms
-[32m@fellwork/eslint-config-core:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m122.00 B[39m
-[32m@fellwork/eslint-config-core:build: [0m[32mCJS[39m ⚡️ Build success in 4663ms
-[32m@fellwork/eslint-config-core:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m12.14 KB[39m
+[33m@fellwork/eslint-config-core:build: [0mcache hit, replaying output [2m4b3ab17a681c9c2e[0m
+[33m@fellwork/eslint-config-core:build: [0m
+[33m@fellwork/eslint-config-core:build: [0m> @fellwork/eslint-config-core@1.0.0 build D:\dev\fellwork\shared-configs\packages\eslint-config-core
+[33m@fellwork/eslint-config-core:build: [0m> tsup
+[33m@fellwork/eslint-config-core:build: [0m
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Building entry: src/index.ts
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Using tsconfig: tsconfig.json
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m tsup v5.11.13
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Using tsup config: D:\dev\fellwork\shared-configs\packages\eslint-config-core\tsup.config.ts
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Target: node12
+[33m@fellwork/eslint-config-core:build: [0m[34mCLI[39m Cleaning output folder
+[33m@fellwork/eslint-config-core:build: [0m[34mCJS[39m Build start
+[33m@fellwork/eslint-config-core:build: [0m
+[33m@fellwork/eslint-config-core:build: [0mD:\dev\fellwork\shared-configs\node_modules\.pnpm\tsup@5.11.13_typescript@4.6.2\node_modules\tsup\assets\cjs_shims.js
+[33m@fellwork/eslint-config-core:build: [0m  0:0  warning  File ignored by default.  Use a negated ignore pattern (like "--ignore-pattern '!<relative/path/to/filename>'") to override
+[33m@fellwork/eslint-config-core:build: [0m
+[33m@fellwork/eslint-config-core:build: [0m✖ 1 problem (0 errors, 1 warning)
+[33m@fellwork/eslint-config-core:build: [0m
+[33m@fellwork/eslint-config-core:build: [0m[34mDTS[39m Build start
+[33m@fellwork/eslint-config-core:build: [0m[32mDTS[39m ⚡️ Build success in 5843ms
+[33m@fellwork/eslint-config-core:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m122.00 B[39m
+[33m@fellwork/eslint-config-core:build: [0m[32mCJS[39m ⚡️ Build success in 11156ms
+[33m@fellwork/eslint-config-core:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m12.14 KB[39m

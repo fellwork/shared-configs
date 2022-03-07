@@ -1,4 +1,4 @@
-[32m@fellwork/prettier-config:build: [0mcache hit, replaying output [2mfa6ac93e899cc60b[0m
+[32m@fellwork/prettier-config:build: [0mcache hit, replaying output [2m80e8e1e253c39c64[0m
 [32m@fellwork/prettier-config:build: [0m
 [32m@fellwork/prettier-config:build: [0m> @fellwork/prettier-config@1.0.0 build D:\dev\fellwork\shared-configs\packages\prettier-config
 [32m@fellwork/prettier-config:build: [0m> tsup
@@ -16,7 +16,7 @@
 [32m@fellwork/prettier-config:build: [0m✖ 1 problem (0 errors, 1 warning)
 [32m@fellwork/prettier-config:build: [0m
 [32m@fellwork/prettier-config:build: [0m[34mDTS[39m Build start
-[32m@fellwork/prettier-config:build: [0m[32mDTS[39m ⚡️ Build success in 1751ms
+[32m@fellwork/prettier-config:build: [0m[32mDTS[39m ⚡️ Build success in 2417ms
 [32m@fellwork/prettier-config:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m230.00 B[39m
-[32m@fellwork/prettier-config:build: [0m[32mCJS[39m ⚡️ Build success in 8140ms
+[32m@fellwork/prettier-config:build: [0m[32mCJS[39m ⚡️ Build success in 9444ms
 [32m@fellwork/prettier-config:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m206.00 B[39m

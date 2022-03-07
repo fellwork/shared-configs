@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/eslint": "^8.4.1",
     "esbuild": "^0.14.25",
+    "esbuild-node-externals": "^1.4.1",
     "esbuild-plugin-eslint": "^0.0.1",
     "eslint": "^8.10.0",
     "tsup": "^5.11.13",

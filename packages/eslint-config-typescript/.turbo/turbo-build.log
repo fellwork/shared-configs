@@ -1,4 +1,4 @@
-[34m@fellwork/eslint-config-typescript:build: [0mcache hit, replaying output [2m01211abe76c29cf2[0m
+[34m@fellwork/eslint-config-typescript:build: [0mcache hit, replaying output [2mca522239554ab347[0m
 [34m@fellwork/eslint-config-typescript:build: [0m
 [34m@fellwork/eslint-config-typescript:build: [0m> @fellwork/eslint-config-typescript@1.0.0 build D:\dev\fellwork\shared-configs\packages\eslint-config-typescript
 [34m@fellwork/eslint-config-typescript:build: [0m> tsup
@@ -17,7 +17,7 @@
 [34m@fellwork/eslint-config-typescript:build: [0m✖ 1 problem (0 errors, 1 warning)
 [34m@fellwork/eslint-config-typescript:build: [0m
 [34m@fellwork/eslint-config-typescript:build: [0m[34mDTS[39m Build start
-[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m ⚡️ Build success in 1813ms
+[34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m ⚡️ Build success in 1858ms
 [34m@fellwork/eslint-config-typescript:build: [0m[32mDTS[39m [1mdist\index.d.ts [22m[32m122.00 B[39m
-[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m ⚡️ Build success in 5171ms
+[34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m ⚡️ Build success in 4558ms
 [34m@fellwork/eslint-config-typescript:build: [0m[32mCJS[39m [1mdist\index.js [22m[32m2.89 KB[39m
