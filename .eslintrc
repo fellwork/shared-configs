@@ -27,12 +27,23 @@
       }
     },
     {
-      "files": ["*.json", "*.json5"],
+      "files": ["*.json", "*.json5", "*.jsonc"],
       "parser": "jsonc-eslint-parser",
       "rules": {
         "comma-dangle": ["error", "never"],
         "quote-props": ["error", "always"],
         "quotes": ["error", "double"]
+      }
+    },
+    {
+      "files": ["*.prettierrc"],
+      "parser": "jsonc-eslint-parser",
+      "rules": {
+        "comma-dangle": ["error", "never"],
+        "quote-props": ["error", "always"],
+        "quotes": ["error", "double"],
+        "jsonc/sort-array-values": "error",
+        "jsonc/sort-keys": "error"
       }
     },
     {
@@ -112,7 +123,7 @@
       "plugins": ["@typescript-eslint"]
     }
   ],
-  "plugins": ["html", "import", "n", "promise", "sort-keys", "unicorn"],
+  "plugins": ["html", "import", "n", "promise", "sort-keys-fix", "unicorn"],
   "rules": {
     "@typescript-eslint/ban-ts-comment": [
       "error",
@@ -455,8 +466,7 @@
         "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
       }
     ],
-    "sort-keys": "off",
-    "sort-keys/sort-keys-fix": "warn",
+    "sort-keys-fix/sort-keys-fix": "warn",
     "space-after-function-name": "off",
     "space-after-keywords": "off",
     "space-before-blocks": "off",

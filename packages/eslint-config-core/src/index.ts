@@ -103,7 +103,7 @@ const config = {
       },
     },
   ],
-  plugins: ['html', 'import', 'n', 'promise', 'sort-keys', 'unicorn'],
+  plugins: ['html', 'import', 'n', 'promise', 'sort-keys-fix', 'unicorn'],
   rules: {
     ...stdModifiedRules,
     'eslint-comments/disable-enable-pair': 'off',
@@ -125,7 +125,7 @@ const config = {
     'n/no-path-concat': 'error',
     'n/process-exit-as-throw': 'error',
     'promise/param-names': 'error',
-    'sort-keys/sort-keys-fix': 'warn',
+    'sort-keys-fix/sort-keys-fix': 'warn',
     'unicorn/error-message': 'error',
     'unicorn/escape-case': 'error',
     'unicorn/no-array-instanceof': 'error',
