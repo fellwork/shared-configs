@@ -5,12 +5,12 @@
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
-    "build": "turbo run build",
+    "build": "pnpm -r run build",
     "bump": "changeset version",
     "clean:build": "pnpm -rp exec rimraf dist .turbo",
     "clean:node": "pnpm -rp exec rimraf packages/**/node_modules",
     "lint:pkg": "eslint packages --config .eslintrc --fix",
-    "lint:repo": "eslint --config .eslintrc --fix",
+    "lint": "eslint --config .eslintrc --fix",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
     "push": "git push --follow-tags",
@@ -30,16 +30,18 @@
     "@release-it/conventional-changelog": "^4.2.2",
     "cz-conventional-changelog": "3.3.0",
     "devmoji": "^2.3.0",
+    "esbuild": "^0.14.25",
     "esbuild-node-externals": "^1.4.1",
     "esbuild-runner": "^2.2.1",
-    "esbuild": "^0.14.25",
     "eslint": "^8.10.0",
     "execa": "^6.1.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.5",
     "prettier": "^2.5.1",
-    "release-it": "^14.12.5",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "release-it": "^14.12.5"
   }
 }

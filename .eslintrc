@@ -42,7 +42,6 @@
         "comma-dangle": ["error", "never"],
         "quote-props": ["error", "always"],
         "quotes": ["error", "double"],
-        "jsonc/sort-array-values": "error",
         "jsonc/sort-keys": "error"
       }
     },
