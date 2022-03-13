@@ -1,9 +1,6 @@
 import type { Linter } from 'eslint'
 
-// require('@rushstack/eslint-patch/modern-module-resolution')
-
 const config = {
-  extends: ['@fellwork/eslint-config-core'],
   overrides: [
     {
       extends: [

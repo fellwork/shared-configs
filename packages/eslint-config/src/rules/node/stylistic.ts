@@ -1,0 +1,22 @@
+export const stylistic = {
+  rules: {
+    'n/callback-return': 'error',
+    'n/exports-style': ['error', 'module.exports', { allowBatchAssign: false }],
+    'n/file-extension-in-import': 'off',
+    'n/global-require': 'error',
+    'n/no-mixed-requires': 'error',
+    'n/no-process-env': 'error',
+    'n/no-restricted-import': 'error',
+    'n/no-restricted-require': 'error',
+    'n/no-sync': 'error',
+    'n/prefer-global/buffer': ['error', 'always'],
+    'n/prefer-global/console': ['error', 'always'],
+    'n/prefer-global/process': ['error', 'always'],
+    'n/prefer-global/text-decoder': ['error', 'always'],
+    'n/prefer-global/text-encoder': ['error', 'always'],
+    'n/prefer-global/url': ['error', 'always'],
+    'n/prefer-global/url-search-params': ['error', 'always'],
+    'n/prefer-promises/dns': 'error',
+    'n/prefer-promises/fs': 'error',
+  },
+}

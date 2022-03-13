@@ -1,5 +1,4 @@
 // src/index.ts
-require('@rushstack/eslint-patch/modern-module-resolution')
 var config = {
   extends: ['@fellwork/eslint-config-core'],
   overrides: [

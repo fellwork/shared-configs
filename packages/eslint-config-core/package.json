@@ -26,7 +26,8 @@
   },
   "peerDependencies": {
     "eslint": ">=7.4.0",
-    "prettier": "*"
+    "prettier": "*",
+    "typescript": ">=3.3.1"
   },
   "publishConfig": {
     "access": "public"
@@ -51,22 +52,19 @@
   },
   "devDependencies": {
     "@babel/core": "~7.17.5",
-    "@release-it/conventional-changelog": "^4.2.2",
+    "@release-it/conventional-changelog": "~4.2.2",
     "@types/babel__core": "~7.1.18",
     "@types/eslint": "~8.4.1",
     "@types/node": "~17.0.21",
     "@types/prettier": "~2.4.4",
     "esbuild": "~0.14.25",
-    "esbuild-node-externals": "^1.4.1",
+    "esbuild-node-externals": "~1.4.1",
     "esbuild-plugin-eslint": "~0.0.1",
     "eslint": "~8.10.0",
     "prettier": "~2.5.1",
-    "release-it": "^14.12.5",
+    "release-it": "~14.12.5",
     "tslib": "~2.3.1",
-    "tsup": "~5.11.13",
+    "tsup": "~5.12.1",
     "typescript": "~4.6.2"
-  },
-  "release-it": {
-    "git"
   }
 }

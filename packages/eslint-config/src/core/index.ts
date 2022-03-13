@@ -1,7 +1,4 @@
 import type { Linter } from 'eslint'
-import stdModifiedRules from './rules/std-modified'
-
-// require('@rushstack/eslint-patch/modern-module-resolution')
 
 const config = {
   env: {
@@ -105,7 +102,6 @@ const config = {
   ],
   plugins: ['html', 'import', 'n', 'promise', 'sort-keys-fix', 'unicorn'],
   rules: {
-    ...stdModifiedRules,
     'eslint-comments/disable-enable-pair': 'off',
     'import/export': 'error',
     'import/first': 'error',

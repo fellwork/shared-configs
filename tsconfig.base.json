@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["packages", "scripts", "tooling"],
+  "include": ["packages"],
   "exclude": ["**/node_modules", "**/*/dist", ".husky/**"],
   "compilerOptions": {
     // Disable emitting file from a compilation.

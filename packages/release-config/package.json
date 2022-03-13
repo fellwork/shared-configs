@@ -1,0 +1,20 @@
+{
+  "name": "@fellwork/release-config",
+  "version": "0.0.0",
+  "description": "Shared package release settings",
+  "main": "./dist/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git"
+  },
+  "author": "Shane <srmcguirt@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "homepage": "https://github.com/fellwork/shared-configs#readme"
+}

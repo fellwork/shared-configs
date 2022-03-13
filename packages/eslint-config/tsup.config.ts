@@ -7,6 +7,6 @@ export default defineConfig({
   dts: true,
   entry: ['src/index.ts'],
   esbuildPlugins: [lint({ fix: true }), nodeExternalsPlugin()],
-  external: ['@rushstack/eslint-patch'],
   format: ['cjs'],
+  splitting: false,
 })
