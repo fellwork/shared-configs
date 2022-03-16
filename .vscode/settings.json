@@ -15,17 +15,17 @@
           "support.class.builtin",
           "keyword.control",
           "constant.language",
-          "entity.other.attribute-name",
+          "entity.other.attribute-name"
           // "string.quoted.single",
-          "entity.name.method",
-          "entity.name.tag"
+          // "entity.name.method",
+          // "entity.name.tag"
         ],
         "settings": {
           "fontStyle": "italic" // the font style that should be applied
         }
       },
       {
-        "scope": ["keyword.operator"],
+        "scope": ["keyword.operator", "entity.name.type"],
         "settings": {
           "fontStyle": ""
         }
