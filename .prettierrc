@@ -1,6 +1,7 @@
 {
   "arrowParens": "always",
   "bracketSpacing": true,
+  "eol": "lf",
   "htmlWhitespaceSensitivity": "ignore",
   "semi": false,
   "singleQuote": true,

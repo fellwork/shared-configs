@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig/tsconfig.strict.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": true,
+    "types": ["node", "fs-extra"],
+    "typeRoots": ["./node_modules/@types"],
+    "module": "esnext",
+    "target": "esnext"
+  }
+}

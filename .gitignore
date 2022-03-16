@@ -1,12 +1,12 @@
 .history
-build
 dist
 *.log
+*.out
+*.tsbuildinfo
 .env
 .cache
 **/turbo-build.log
 **/.turbo
 **/dist/**
-**/build/**
 **/node_modules/**
 node_modules
