@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig/tsconfig.strict.json",
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true,
-    "useUnknownInCatchVariables": true,
-    "module": "esnext",
-    "target": "esnext"
-  }
-}
