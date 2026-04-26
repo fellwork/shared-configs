@@ -1,0 +1,15 @@
+node_modules/
+bun.lockb
+dist/
+.tsbuildinfo
+*.tsbuildinfo
+.moon/cache/
+.moon/docker/
+.idea/
+.DS_Store
+Thumbs.db
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*

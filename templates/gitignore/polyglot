@@ -1,0 +1,28 @@
+# Node
+node_modules/
+bun.lockb
+dist/
+.tsbuildinfo
+*.tsbuildinfo
+
+# Rust
+target/
+**/*.rs.bk
+
+# Moon
+.moon/cache/
+.moon/docker/
+
+# Editors
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / logs
+.env
+.env.local
+.env.*.local
+*.log
