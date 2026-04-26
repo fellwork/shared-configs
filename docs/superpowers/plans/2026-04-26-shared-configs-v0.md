@@ -1152,30 +1152,43 @@ cp c:/git/fellwork/lint/LICENSE c:/git/fellwork-worktrees/shared-configs-v0/pack
 
 Open `c:/git/fellwork-worktrees/shared-configs-v0/packages/biome-config/README.md`. Replace any `https://github.com/fellwork/lint` with `https://github.com/fellwork/shared-configs/tree/main/packages/biome-config`.
 
-### Task 2.6: Run the package's tests
+### Task 2.6: Add the workspace package as a root devDep and run tests
 
-- [ ] **Step 1: Install workspace deps**
+- [ ] **Step 1: Add `@fellwork/biome-config: "workspace:*"` to root `package.json` devDependencies**
+
+Same Bun-workspace-symlink reason as Task 1.8 step 2: without the explicit root devDep, biome cannot resolve `@fellwork/biome-config/base` in the root biome.json (Task 2.7).
+
+After editing, root devDependencies should include:
+
+```json
+"@fellwork/biome-config": "workspace:*",
+"@fellwork/tsconfig": "workspace:*",
+```
+
+- [ ] **Step 2: Re-install to create the workspace symlink**
 
 ```bash
 cd c:/git/fellwork-worktrees/shared-configs-v0
 bun install
+ls node_modules/@fellwork/biome-config/presets/
 ```
+Expected: lists 7 JSON files (base, lib, next, node, nuxt, react, vue).
 
-- [ ] **Step 2: Run fixtures**
+- [ ] **Step 3: Run fixtures**
 
 ```bash
 cd c:/git/fellwork-worktrees/shared-configs-v0/packages/biome-config
 bun run tests/run-fixtures.ts
 ```
-Expected: all preset fixtures pass biome check. If any fail, inspect: most likely a fixture references a preset path that no longer matches the layout. Fix by editing the fixture's `biome.json` to point at the preset within this package.
+Expected: `✓ all fixtures pass (7 presets)`. If any fail, inspect: most likely a fixture references a preset path that no longer matches the layout. Fix by editing the fixture's `biome.json` to point at the preset within this package.
 
-- [ ] **Step 3: Run biome check on the package itself**
+- [ ] **Step 4: Run biome check on the package itself**
 
 ```bash
 cd c:/git/fellwork-worktrees/shared-configs-v0
 bunx biome check packages/biome-config
 ```
-Expected: passes.
+Expected: passes. If biome reformats CRLF→LF or expands inline arrays from copied files, accept the reformats with `bunx biome check --write packages/biome-config` and re-run.
 
 ### Task 2.7: Rewrite the root biome.json to extend `@fellwork/biome-config/base`
 
@@ -1204,11 +1217,14 @@ Write this exact content (replaces the hand-written version from Task 0.4):
       "!**/node_modules",
       "!**/dist",
       "!**/.tsbuildinfo",
-      "!**/CHANGELOG.md"
+      "!**/CHANGELOG.md",
+      "!packages/biome-config/tests/fixtures"
     ]
   }
 }
 ```
+
+> **Note:** The `!packages/biome-config/tests/fixtures` exclude is required because each fixture has its own `biome.json` declaring `"root": true`, which biome 2.x rejects when a parent biome.json already exists. The fixtures must remain isolated from the root config.
 
 - [ ] **Step 2: Verify dogfood works**
 
@@ -1218,6 +1234,24 @@ bun install
 bunx biome check .
 ```
 Expected: passes. If biome can't resolve `@fellwork/biome-config/base`, ensure `bun install` re-linked workspaces (run twice if needed).
+
+- [ ] **Step 3: Apply biome auto-fixes triggered by adopting the base preset**
+
+The `base` preset has stricter rules than the hand-written biome.json from Task 0.4. Adopting it forces several fixups across already-committed files:
+
+```bash
+cd c:/git/fellwork-worktrees/shared-configs-v0
+bunx biome check --write .
+bunx biome check . # verify clean after fixes
+```
+
+Expected fixups:
+- `packages/biome-config/package.json`: inline `files` array expanded to multiline.
+- `packages/biome-config/tests/run-fixtures.ts`: arrow params get explicit parens (`name =>` → `(name) =>`).
+- Some files may need manual `// biome-ignore lint/suspicious/noConsole: CLI script` suppressions at every `console.log/error` call site — the `base` preset has `noConsole: "warn"` (or stricter). CLI scripts that genuinely use console (`packages/tsconfig/scripts/validate.ts` and `packages/biome-config/tests/run-fixtures.ts`) need these suppressions added by hand. Do NOT delete the console calls — they are intentional CLI output.
+- `useOptionalChain: "error"` may flag `if (x && x.foo())` patterns. Apply with `bunx biome check --write --unsafe .` carefully and verify behavior is preserved (the `&&` → `?.` rewrite is equivalent for `string | null | undefined` types but NOT for `0 | null | undefined`).
+
+Stage and commit any fixups together with the biome.json rewrite under Task 2.8's commit. Do NOT make a separate "biome auto-fix" commit — the fixups are caused by the dogfooding switch and belong to it.
 
 ### Task 2.8: Add the changeset and commit Phase 2
 
