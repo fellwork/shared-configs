@@ -2,7 +2,13 @@
   "name": "@fellwork/release-config",
   "version": "0.1.0",
   "description": "Shared bumpp + changesets defaults for Fellwork projects.",
-  "keywords": ["bumpp", "changesets", "release", "shared-config", "fellwork"],
+  "keywords": [
+    "bumpp",
+    "changesets",
+    "release",
+    "shared-config",
+    "fellwork"
+  ],
   "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/release-config#readme",
   "bugs": {
     "url": "https://github.com/fellwork/shared-configs/issues"
@@ -21,7 +27,11 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
