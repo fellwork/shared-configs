@@ -11,7 +11,8 @@ packages:
     - '@fellwork/lefthook-config'
     - '@fellwork/cspell-config'
     - '@fellwork/markdownlint-config'
-    - 'changesets'
+    - '@changesets/cli'
+    - '@changesets/changelog-github'
     - 'bumpp'
   peerDependencies:
     - { name: 'typescript', version: '>=5.5.0' }
