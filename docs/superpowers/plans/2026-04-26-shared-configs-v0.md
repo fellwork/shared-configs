@@ -1722,9 +1722,11 @@ export const changesetsDefaults = {
 - [ ] **Step 4: Write `src/index.ts`**
 
 ```typescript
-export { bumppDefaults } from './bumpp.ts'
-export { changesetsDefaults } from './changesets.ts'
+export { bumppDefaults } from './bumpp.js'
+export { changesetsDefaults } from './changesets.js'
 ```
+
+> **Note:** Use `.js` extensions in imports, NOT `.ts`. With `module: NodeNext` and emit enabled (which library mode requires), TypeScript rejects `.ts` extensions in imports — `.ts` is only legal under `allowImportingTsExtensions: true`, and that flag requires `noEmit: true`. Since this package emits `dist/`, the imports must use `.js` (NodeNext maps these back to the `.ts` source at compile time, then to the emitted `.js` at runtime).
 
 - [ ] **Step 5: Write `tsconfig.json`**
 
