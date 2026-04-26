@@ -4445,19 +4445,28 @@ vcs:
  * Exits 0 if all manifests validate; exits 1 with the first error otherwise.
  */
 
-import { readFileSync, readdirSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import Ajv from 'ajv'
+import AjvLib from 'ajv'
 import * as YAML from 'yaml'
+
+// Ajv 8 ships as CJS; under ESM/NodeNext the default may be double-wrapped.
+// biome-ignore lint/suspicious/noExplicitAny: CJS interop for Ajv default export
+const Ajv = (AjvLib as any).default ?? AjvLib
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const KINDS_DIR = resolve(__dirname, '..', 'kinds')
 const SCHEMA_PATH = join(KINDS_DIR, '_schema.json')
 
 function main(): void {
-  const ajv = new Ajv({ allErrors: true })
-  const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'))
+  // biome-ignore lint/suspicious/noExplicitAny: Ajv constructor type lost after interop unwrap
+  const ajv = new Ajv({ allErrors: true }) as any
+  // Strip the $schema field so Ajv doesn't attempt to fetch the meta-schema URI
+  const { $schema: _s, ...schema } = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8')) as Record<
+    string,
+    unknown
+  >
   const validate = ajv.compile(schema)
 
   const files = readdirSync(KINDS_DIR).filter((f) => f.endsWith('.yaml'))
@@ -4469,32 +4478,50 @@ function main(): void {
     const data = YAML.parse(readFileSync(path, 'utf8'))
 
     if (data.kind !== expectedKind) {
+      // biome-ignore lint/suspicious/noConsole: CLI script
       console.error(`✗ ${f}: kind="${data.kind}" does not match filename`)
       failed++
       continue
     }
 
     if (!validate(data)) {
+      // biome-ignore lint/suspicious/noConsole: CLI script
       console.error(`✗ ${f}: schema validation failed:`)
       for (const err of validate.errors ?? []) {
+        // biome-ignore lint/suspicious/noConsole: CLI script
         console.error(`    ${err.instancePath} ${err.message}`)
       }
       failed++
       continue
     }
 
+    // biome-ignore lint/suspicious/noConsole: CLI script
     console.log(`✓ ${f}`)
   }
 
   if (failed > 0) {
+    // biome-ignore lint/suspicious/noConsole: CLI script
     console.error(`\n${failed}/${files.length} manifest(s) failed`)
     process.exit(1)
   }
+  // biome-ignore lint/suspicious/noConsole: CLI script
   console.log(`\nAll ${files.length} manifest(s) valid`)
 }
 
 main()
 ```
+
+> **Implementation note (plan defect):** The original plan used `import Ajv from 'ajv'` directly and `ajv.compile(schema)`. Two defects were found during execution:
+>
+> 1. **Ajv + 2020-12 meta-schema:** Ajv 8 throws `no schema with key or ref "https://json-schema.org/draft/2020-12/schema"` when the schema's `$schema` URI is present. Fix: strip `$schema` from the loaded schema object before compiling.
+>
+> 2. **Ajv CJS/ESM interop:** Under NodeNext module resolution, `import Ajv from 'ajv'` produces a namespace object without a constructor. Fix: use `(AjvLib as any).default ?? AjvLib` to unwrap the CJS default export.
+>
+> 3. **`@types/bun` needed:** The root tsconfig (NodeNext, lib ES2023) needs `@types/bun` installed for `bun:test`, `import.meta.url`, `process`, `console` to type-check. Add: `bun add -d @types/bun`.
+>
+> 4. **`tools/tsconfig.json` needed:** Create a local tsconfig in `tools/` with `"moduleResolution": "Bundler"` and `"types": ["@types/bun"]` so the tools subdir type-checks correctly.
+>
+> 5. **`noUncheckedIndexedAccess` + `split`:** `w.split('@')[0]` returns `string | undefined` under strict mode. Fix: `w.split('@')[0] ?? w`.
 
 - [ ] **Step 2: Add `ajv` dependency**
 
