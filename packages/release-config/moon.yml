@@ -1,0 +1,32 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  build:
+    command: 'bunx tsc -b'
+    inputs:
+      - 'src/**/*.ts'
+      - 'tsconfig.json'
+    outputs:
+      - 'dist'
+
+  check:
+    command: 'bunx biome check src'
+    inputs:
+      - 'src/**/*.ts'
+
+  test:
+    command: 'bunx tsc -b --dry'
+    inputs:
+      - 'src/**/*.ts'
+      - 'tsconfig.json'
+    deps:
+      - '~:build'
+
+  ci:
+    command: 'noop'
+    deps:
+      - '~:check'
+      - '~:test'

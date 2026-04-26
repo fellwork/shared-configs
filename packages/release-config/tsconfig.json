@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": ["@fellwork/tsconfig/node", "@fellwork/tsconfig/library"],
+  "include": ["src/**/*.ts"]
+}

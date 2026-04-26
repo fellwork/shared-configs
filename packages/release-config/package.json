@@ -1,0 +1,50 @@
+{
+  "name": "@fellwork/release-config",
+  "version": "0.1.0",
+  "description": "Shared bumpp + changesets defaults for Fellwork projects.",
+  "keywords": ["bumpp", "changesets", "release", "shared-config", "fellwork"],
+  "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/release-config#readme",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "license": "MIT",
+  "author": "Fellwork <shane@fellwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git",
+    "directory": "packages/release-config"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md", "LICENSE"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bumpp": {
+      "types": "./dist/bumpp.d.ts",
+      "default": "./dist/bumpp.js"
+    },
+    "./changesets": {
+      "types": "./dist/changesets.d.ts",
+      "default": "./dist/changesets.js"
+    }
+  },
+  "peerDependencies": {
+    "bumpp": ">=11.0.0"
+  },
+  "devDependencies": {
+    "@fellwork/tsconfig": "workspace:*",
+    "bumpp": "^11.0.1",
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  }
+}
