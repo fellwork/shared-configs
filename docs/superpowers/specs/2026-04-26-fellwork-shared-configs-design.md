@@ -271,10 +271,50 @@ and computes the diff.
 - Require all conversations resolved
 - Disallow direct pushes — all changes via PR
 
-### Required repo secret
+### Publishing model — npm trusted publishing (OIDC)
 
-- `NPM_TOKEN` — npm Automation token with publish rights for the
-  `@fellwork` scope.
+All CI publishes use **npm trusted publishing**. No long-lived `NPM_TOKEN`
+secret lives in any GitHub Actions workflow — neither in `shared-configs`
+nor in downstream consumer repos.
+
+The reusable `npm-release.yml` workflow declares
+`permissions: id-token: write` and the npm CLI (≥ 11.5.1) exchanges the
+short-lived OIDC token for a one-time publish credential at publish time.
+The workflow is strictly OIDC-only and does not accept an `NPM_TOKEN`
+secret as input — any edge case requiring token-based publishing forks the
+workflow rather than complicating the shared one.
+
+Each `@fellwork/*` package must be registered as a trusted publisher on
+npmjs.com (per-package, not scope-wide), naming the consuming repo and the
+workflow path. For `shared-configs`'s own 9 packages, that registration
+points at `fellwork/shared-configs` + `release.yml`. For a TS library
+scaffolded by foreman, it points at the consumer's repo + its
+`release.yml`.
+
+### First-publish bootstrap
+
+Trusted publishing requires the package to already exist on npmjs.com — a
+brand-new package name cannot be OIDC-published. For each new package's
+*first* publish:
+
+1. Pull a short-lived **granular access token** from npmjs.com (scoped to
+   the package, ~24h expiry).
+2. Write it to a local `.env` (gitignored — never committed).
+3. Publish from the maintainer's laptop using that token.
+4. Configure the package as a trusted publisher on npmjs.com (specify
+   `fellwork/<repo>` + workflow path).
+5. Discard the local token (let it expire or revoke on npmjs.com).
+
+All subsequent publishes go through CI via OIDC. No persistent
+`NPM_TOKEN` secret exists in any repo at any point.
+
+### Foreman scaffolding implication
+
+When foreman scaffolds a `ts-library` (or any kind that publishes to npm),
+the generated README includes a "first release" section walking the
+maintainer through the bootstrap above. The scaffolded repo has **no**
+"set `NPM_TOKEN` secret" step in its setup docs, and **no** `NPM_TOKEN`
+field referenced in any of its workflows.
 
 ### Dogfooding
 
@@ -425,6 +465,9 @@ Archive on GitHub. Add redirect README pointing to `shared-configs`.
 | 7 | `foreman sync` capability is v0, not v2 | Research showed the update story is what separates real platforms from one-shot scaffolders |
 | 8 | Templates are plain files with placeholder substitution, not a templating engine | Diffs cleanly for `foreman sync`; engines like Handlebars make diffs untractable |
 | 9 | Major-tag pinning for reusable workflows (`@v1`, `@v2`) | Industry standard; lets consumers opt into breaking changes |
+| 10 | npm trusted publishing (OIDC) for all CI publishes; no `NPM_TOKEN` secret anywhere | Eliminates leaked-token blast radius; every publish credential is short-lived and one-time-use |
+| 11 | First-publish bootstrap uses a local granular token in `.env` (laptop only, never CI) | Trusted publishing requires the package to exist on npmjs.com first; the bootstrap is the only time a token is held, and it lives outside CI |
+| 12 | Reusable `npm-release.yml` is strictly OIDC-only, no `NPM_TOKEN` input | Forces consumer repos onto the secure path; edge cases fork the workflow rather than weakening the shared one |
 
 ---
 
