@@ -8,9 +8,17 @@
         "@biomejs/biome": "2.4.13",
         "@changesets/changelog-github": "^0.5.0",
         "@changesets/cli": "^2.27.0",
+        "@fellwork/biome-config": "workspace:*",
         "@fellwork/tsconfig": "workspace:*",
         "oxlint": "^0.15.0",
         "typescript": "^5.6.2",
+      },
+    },
+    "packages/biome-config": {
+      "name": "@fellwork/biome-config",
+      "version": "0.2.0",
+      "peerDependencies": {
+        "@biomejs/biome": ">=2.0.0",
       },
     },
     "packages/tsconfig": {
@@ -82,6 +90,8 @@
     "@changesets/types": ["@changesets/types@6.1.0", "", {}, "sha512-rKQcJ+o1nKNgeoYRHKOS07tAMNd3YSN0uHaJOZYjBAgxfV7TUE7JE+z4BzZdQwb5hKaYbayKN5KrYV7ODb2rAA=="],
 
     "@changesets/write": ["@changesets/write@0.4.0", "", { "dependencies": { "@changesets/types": "^6.1.0", "fs-extra": "^7.0.1", "human-id": "^4.1.1", "prettier": "^2.7.1" } }, "sha512-CdTLvIOPiCNuH71pyDu3rA+Q0n65cmAbXnwWH84rKGiFumFzkmHNT8KHTMEchcxN+Kl8I54xGUhJ7l3E7X396Q=="],
+
+    "@fellwork/biome-config": ["@fellwork/biome-config@workspace:packages/biome-config"],
 
     "@fellwork/tsconfig": ["@fellwork/tsconfig@workspace:packages/tsconfig"],
 

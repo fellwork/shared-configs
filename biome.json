@@ -1,5 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
+  "extends": ["@fellwork/biome-config/base"],
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -14,36 +15,8 @@
       "!**/node_modules",
       "!**/dist",
       "!**/.tsbuildinfo",
-      "!**/CHANGELOG.md"
+      "!**/CHANGELOG.md",
+      "!packages/biome-config/tests/fixtures"
     ]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 100,
-    "lineEnding": "lf"
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single",
-      "semicolons": "asNeeded",
-      "trailingCommas": "all",
-      "arrowParentheses": "always"
-    }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
   }
 }

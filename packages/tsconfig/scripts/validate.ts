@@ -26,6 +26,7 @@ function run(fixture: string): boolean {
     : ['x', 'tsc', '--noEmit', '--project', project]
   const result = spawnSync('bun', args, { stdio: 'inherit' })
   if (result.error) {
+    // biome-ignore lint/suspicious/noConsole: CLI script
     console.error(`  spawn error for ${fixture}:`, result.error.message)
     return false
   }
@@ -34,18 +35,22 @@ function run(fixture: string): boolean {
 
 const fixtures = listFixtures()
 if (fixtures.length === 0) {
+  // biome-ignore lint/suspicious/noConsole: CLI script
   console.error('No fixtures found.')
   process.exit(1)
 }
 
 let failed = 0
 for (const fixture of fixtures) {
+  // biome-ignore lint/suspicious/noConsole: CLI script
   console.log(`\n→ validating ${fixture}`)
   if (!run(fixture)) failed++
 }
 
 if (failed > 0) {
+  // biome-ignore lint/suspicious/noConsole: CLI script
   console.error(`\n${failed}/${fixtures.length} fixture(s) failed.`)
   process.exit(1)
 }
+// biome-ignore lint/suspicious/noConsole: CLI script
 console.log(`\nAll ${fixtures.length} fixture(s) passed.`)
