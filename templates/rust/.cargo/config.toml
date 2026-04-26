@@ -1,0 +1,13 @@
+[build]
+incremental = true
+
+[target.'cfg(all())']
+rustflags = [
+  "-D", "warnings",
+]
+
+[net]
+git-fetch-with-cli = true
+
+[registries.crates-io]
+protocol = "sparse"

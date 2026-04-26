@@ -1,0 +1,21 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  check:
+    command: 'bunx biome check .'
+    inputs:
+      - '*.json'
+
+  test:
+    command: 'bunx biome check markdownlint.json'
+    inputs:
+      - 'markdownlint.json'
+
+  ci:
+    command: 'noop'
+    deps:
+      - '~:check'
+      - '~:test'

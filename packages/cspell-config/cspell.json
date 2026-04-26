@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "name": "fellwork",
+      "path": "./fellwork.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": ["fellwork"],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "*.lock",
+    "bun.lock",
+    "*.tsbuildinfo",
+    "CHANGELOG.md"
+  ]
+}

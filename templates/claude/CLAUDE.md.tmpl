@@ -1,0 +1,32 @@
+# {{repo_name}}
+
+{{description}}
+
+## Commands
+
+```bash
+bun install                # install dependencies
+moon run :ci               # full CI pipeline (check + test)
+bun run changeset          # add a changeset for the current change
+```
+
+## Layout
+
+- `packages/` (or `src/`) — source
+- `tests/` (or `*.test.ts`) — tests
+- `docs/` — design docs and ADRs
+
+## Conventions
+
+- **Commits:** Conventional Commits per `@fellwork/commitlint-config`. Allowed types: add, breaking, build, chore, chore-deps, chore-release, ci, config, docs, feat, fix, i18n, perf, refactor, release, remove, revert, security, style, test.
+- **Format / lint:** biome (formatter + core lints), oxlint (broad correctness sweep). Configured via `@fellwork/biome-config` and `@fellwork/oxlint-config`.
+- **TypeScript:** `@fellwork/tsconfig` presets. Pick `node`, `browser`, or compose with `library`.
+- **Releases:** changesets-driven, npm trusted publishing (OIDC). No `NPM_TOKEN` secret.
+
+## Skill routing
+
+When the user's request matches an available skill, invoke it via `Skill` first. Common routes:
+
+- Bugs, errors, "why is this broken" → `investigate`
+- Ship, deploy, PR → `ship`
+- Code review → `review`

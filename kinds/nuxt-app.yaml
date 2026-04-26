@@ -1,0 +1,43 @@
+kind: nuxt-app
+description: A Nuxt frontend application
+
+packages:
+  devDependencies:
+    - '@fellwork/tsconfig'
+    - '@fellwork/biome-config'
+    - '@fellwork/oxlint-config'
+    - '@fellwork/commitlint-config'
+    - '@fellwork/lefthook-config'
+    - '@fellwork/cspell-config'
+    - '@fellwork/markdownlint-config'
+  peerDependencies:
+    - { name: 'typescript', version: '>=5.5.0' }
+    - { name: 'nuxt', version: '>=3.13.0' }
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/node
+  - vscode/
+  - claude/
+  - bunfig.toml
+  - 'README.md.tmpl@nuxt-app'
+  - dependabot.yml
+
+tsconfig:
+  extends:
+    - './.nuxt/tsconfig.json'
+    - '@fellwork/tsconfig/base'
+
+workflows:
+  - 'ts-ci.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'
+
+scripts:
+  dev: 'nuxt dev'
+  build: 'nuxt build'
+  lint: 'biome check . && oxlint .'

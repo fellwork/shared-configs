@@ -1,0 +1,44 @@
+kind: polyglot
+description: A repo with both TS and Rust code (e.g., Rust workspace + TS sidecar)
+
+packages:
+  devDependencies:
+    - '@fellwork/tsconfig'
+    - '@fellwork/biome-config'
+    - '@fellwork/oxlint-config'
+    - '@fellwork/commitlint-config'
+    - '@fellwork/lefthook-config'
+    - '@fellwork/cspell-config'
+    - '@fellwork/markdownlint-config'
+  peerDependencies:
+    - { name: 'typescript', version: '>=5.5.0' }
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/polyglot
+  - vscode/
+  - claude/
+  - rust/
+  - bunfig.toml
+  - 'README.md.tmpl@polyglot'
+  - dependabot.yml
+
+tsconfig:
+  extends:
+    - '@fellwork/tsconfig/node'
+
+cargo:
+  workspace:
+    resolver: '2'
+    members:
+      - 'crates/*'
+
+workflows:
+  - 'ts-ci.yml@v1'
+  - 'rust-ci.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'

@@ -1,0 +1,27 @@
+kind: rust-workspace
+description: A multi-crate Cargo workspace, optionally deployed to Fly
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/rust
+  - vscode/
+  - claude/
+  - rust/
+  - 'README.md.tmpl@rust-workspace'
+  - dependabot.yml
+  - fly.toml.tmpl
+
+cargo:
+  workspace:
+    resolver: '2'
+    members:
+      - 'crates/*'
+
+workflows:
+  - 'rust-ci.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'

@@ -1,0 +1,24 @@
+# Shared Fellwork lefthook hooks
+# Override or extend in consumer repo via remote: section.
+
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: '*.{js,ts,tsx,json,jsonc,md,yaml,yml}'
+      run: bunx biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+    oxlint:
+      glob: '*.{js,ts,tsx,jsx,mjs,cjs}'
+      run: bunx oxlint {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --edit {1}
+
+pre-push:
+  commands:
+    typecheck:
+      glob: '*.{ts,tsx}'
+      run: bunx tsc --noEmit

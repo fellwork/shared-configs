@@ -1,0 +1,21 @@
+name: semver label check
+
+on:
+  workflow_call: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: fellwork/shared-configs/.github/actions/extract-semver-label@v1
+        id: bump
+
+      - name: Require a semver label
+        if: ${{ steps.bump.outputs.bump == 'none' }}
+        run: |
+          echo "::error::PR must carry exactly one of: semver:major, semver:minor, semver:patch, semver:canary"
+          exit 1

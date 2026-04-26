@@ -1,0 +1,22 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
+  "extends": ["@fellwork/biome-config/base"],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!bun.lock",
+      "!node_modules",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.tsbuildinfo",
+      "!**/CHANGELOG.md",
+      "!packages/biome-config/tests/fixtures"
+    ]
+  }
+}

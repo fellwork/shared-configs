@@ -1,0 +1,56 @@
+name: npm release
+
+on:
+  workflow_call:
+    inputs:
+      bun-version:
+        description: 'Bun version'
+        required: false
+        type: string
+        default: '1.1.42'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # for changesets to push the version PR
+      pull-requests: write  # for changesets to open the version PR
+      id-token: write       # for npm trusted publishing (OIDC)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: fellwork/shared-configs/.github/actions/setup-bun-biome@v1
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Setup Node (for npm CLI >= 11.5.1)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Verify npm CLI version supports OIDC
+        run: |
+          npm_version=$(npm --version)
+          echo "npm version: $npm_version"
+          required="11.5.1"
+          if [ "$(printf '%s\n%s\n' "$required" "$npm_version" | sort -V | head -n1)" != "$required" ]; then
+            echo "::error::npm $npm_version does not support OIDC publishing. Need >= $required."
+            exit 1
+          fi
+
+      - name: Build packages that need building
+        # Only @fellwork/release-config has a build step; others ship JSON directly.
+        # If more buildable packages are added, list them here.
+        run: bun run --filter '@fellwork/release-config' build
+
+      - name: Create release PR or publish via OIDC
+        uses: changesets/action@v1
+        with:
+          publish: bunx changeset publish
+          version: bun run version-packages
+          commit: 'chore-release: version packages'
+          title: 'chore-release: version packages'
+        # NO NPM_TOKEN — trusted publishing handles it via id-token: write

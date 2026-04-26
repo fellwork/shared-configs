@@ -1,0 +1,41 @@
+{
+  "name": "@fellwork/oxlint-config",
+  "version": "0.1.0",
+  "description": "Shared oxlint configurations for Fellwork projects.",
+  "keywords": [
+    "oxlint",
+    "oxc",
+    "shared-config",
+    "fellwork",
+    "lint"
+  ],
+  "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/oxlint-config#readme",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "license": "MIT",
+  "author": "Fellwork <shane@fellwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git",
+    "directory": "packages/oxlint-config"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "presets",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./base": "./presets/base.json",
+    "./node": "./presets/node.json",
+    "./browser": "./presets/browser.json",
+    "./lib": "./presets/lib.json"
+  },
+  "peerDependencies": {
+    "oxlint": ">=0.15.0"
+  }
+}

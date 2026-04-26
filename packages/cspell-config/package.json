@@ -1,0 +1,37 @@
+{
+  "name": "@fellwork/cspell-config",
+  "version": "0.1.0",
+  "description": "Shared cspell configuration and project dictionary for Fellwork.",
+  "keywords": [
+    "cspell",
+    "spelling",
+    "shared-config",
+    "fellwork"
+  ],
+  "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/cspell-config#readme",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "license": "MIT",
+  "author": "Fellwork <shane@fellwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git",
+    "directory": "packages/cspell-config"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "cspell.json",
+  "files": [
+    "cspell.json",
+    "fellwork.txt",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./cspell.json",
+    "./dictionary": "./fellwork.txt"
+  }
+}

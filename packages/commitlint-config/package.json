@@ -1,0 +1,40 @@
+{
+  "name": "@fellwork/commitlint-config",
+  "version": "0.1.0",
+  "description": "Shared commitlint configuration for Fellwork projects (Conventional Commits + Fellwork's type list).",
+  "keywords": [
+    "commitlint",
+    "conventional-commits",
+    "shared-config",
+    "fellwork"
+  ],
+  "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/commitlint-config#readme",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "license": "MIT",
+  "author": "Fellwork <shane@fellwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git",
+    "directory": "packages/commitlint-config"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "main": "./index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./index.js"
+  },
+  "peerDependencies": {
+    "@commitlint/cli": ">=18.0.0",
+    "@commitlint/config-conventional": ">=18.0.0"
+  }
+}

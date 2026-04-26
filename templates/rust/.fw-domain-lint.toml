@@ -1,0 +1,766 @@
+# fw-domain-lint configuration.
+#
+# Enforces the database-domain writer contract defined in
+# wiki/systems/database-domains.md (authoritative, I-6) plus the
+# apps/web audit in wiki/analyses/2026-04-20-apps-web-server-route-audit.md.
+#
+# All five rules from Plan v2 §C.2 are now wired end-to-end:
+#
+#   Rule 1  [rust]              apps/api must not write CORPUS tables
+#   Rule 2  [rust]              apps/api reading_plans writers are path-allowlisted
+#                               (influencer.rs for the 'influencer' partition;
+#                                admin/reading_plans.rs for cross-partition admin)
+#   Rule 3  [rust_visibility]   fw-store::delete_predicate must stay module-private
+#   Rule 4  [rust]              phrased_blocks writers restricted to fw-phrase,
+#                               fw-pipeline, and fw-store (restore)
+#   Rule 5  [ts]                apps/web/layers/*/server/api must not write
+#                               CORPUS tables via Supabase-JS chains
+#
+# Each rule's allowlist entry below is commented to explain WHY the path is
+# exempt. Add to an allowlist only after a recorded architectural decision.
+
+# ── Schema version pin ────────────────────────────────────────────────────
+# Bumping this requires coordinated PRs across fellwork-api (bump the
+# EXPECTED_SCHEMA_VERSION constant in fw-domain-lint) and any consumer
+# repo whose CI clones this file (currently fellwork-api and fellwork-web).
+# See fellwork-ops/CLAUDE.md § Domain-lint config and the fw-domain-lint
+# source at crates/fw-domain-lint/src/lib.rs.
+schema_version = "1"
+
+# ── Rule 1 ─────────────────────────────────────────────────────────────────
+# apps/api/src/ must not INSERT / UPDATE / DELETE pure CORPUS-data tables.
+# The two documented exceptions (curation.rs and influencer.rs) are handled
+# by narrower rules below.
+[[rule]]
+name = "apps/api must not write CORPUS tables"
+paths = ["fellwork-api/apps/api/src/"]
+# Two existing files build dynamic SQL via `format!` / variable binding
+# but have been audited (I-2) and confirmed to only touch USER-domain
+# tables (`profiles`) or read-only SELECTs over pipeline/corpus tables.
+# The linter cannot statically verify this, so it would otherwise flag
+# them fail-closed. Remove an entry here only after re-auditing the file.
+allow_paths = [
+  # coverage.rs — SELECTs over pipeline_commentary_generations and
+  # format!("SELECT count(*) FROM {table}") for dashboard stats. No writes.
+  "fellwork-api/apps/api/src/routes/admin/coverage.rs",
+  # users.rs — format!("UPDATE profiles SET {fields} WHERE id = $1"). The
+  # dynamic field list is whitelisted in the surrounding push_set!. Target
+  # is always `profiles` (USER). Per I-2 admin-moderation writer.
+  "fellwork-api/apps/api/src/routes/admin/users.rs",
+  # grammar.rs (V-4) — admin runtime Anthropic → grammar_exercises +
+  # grammar_section_recaps. Migrated from apps/web by C.1 ε under Framing B
+  # (user chose apps/api as the canonical admin writer). Admin-gated by
+  # require_admin middleware. See wiki/analyses/2026-04-20-apps-web-server-route-audit.md §V-4.
+  "fellwork-api/apps/api/src/routes/admin/grammar.rs",
+  # language.rs (V-2 + V-3) — admin runtime Anthropic → vocabulary_items.ai_insight
+  # and grammar_lessons.content. Migrated from apps/web by C.1 ε under Framing B.
+  # Admin-gated by require_admin. See C.1 audit §V-2/V-3.
+  "fellwork-api/apps/api/src/routes/admin/language.rs",
+  # pma_queue.rs (V-1) — admin PMA rejection DELETEs phrase_structure_nodes
+  # WHERE source='fellwork-pma'. Migrated from apps/web by C.1 ε under Framing B.
+  # Admin-gated; partition predicate on source column. See C.1 audit §V-1.
+  "fellwork-api/apps/api/src/routes/admin/pma_queue.rs",
+  # depth_insights.rs (P-1) — admin editor for depth_insights. Introduced by
+  # Subagent σ per λ's proposal in wiki/analyses/2026-04-20-depth-insight-authoring-audit.md.
+  # Admin-gated by require_admin middleware; every write logs admin_audit_log.
+  # Replaces the pipeline-only writer with a curatable CRUD surface for the
+  # 5.4k-row seeded corpus. See wiki/analyses/2026-04-20-depth-insight-schema-verify.md
+  # for the trigger contract this handler relies on (20260420000001).
+  "fellwork-api/apps/api/src/routes/admin/depth_insights.rs",
+]
+forbid_targets = [
+  # Biblical text substrate
+  "passages",
+  "passage_tokens",
+  "english_tokens",
+  "kjv_tokens",
+  "stepbible_tokens",
+  "passage_translations",
+  "contextual_translations",
+
+  # Phrased blocks + syntax
+  "phrased_blocks",
+  "phrase_structure_nodes",
+  "chapter_phrased_blocks",
+
+  # fw-phrase / Macula / SBLGNT discourse
+  "pm_clauses",
+  "pm_cic_nodes",
+  "pm_phrase_nodes",
+  "pm_segments",
+  "pm_annotations",
+  "pm_discourse_units",
+  "pm_canonical_tags",
+  "pm_discontinuity_links",
+  "pm_gnt_discourse_tags",
+  "pm_gnt_genitive_absolutes",
+  "pm_gnt_info_structure",
+  "pm_gnt_louw_nida_domains",
+  "pm_gnt_periphrastics",
+  "pm_gnt_referent_mentions",
+  "pm_gnt_referents",
+  "pm_gnt_variants",
+  "pm_multidominance_links",
+  "pm_parse_alt_cics",
+  "pm_parse_alternatives",
+  "psn_annotations",
+  "discourse_annotations",
+
+  # Translation + rendering
+  "fellwork_glosses",
+  "resolved_tokens",
+  "rendered_verses",
+  "translation_renderings",
+  "translation_verses",
+  "translation_profiles",
+  "translation_fingerprints",
+  "translation_comparisons",
+  "translation_rendering_patterns",
+  "esv_strongs_alignment",
+  "lxx_word_alignments",
+  "gloss_overrides",
+
+  # Concepts + depth insights + alignments
+  "concepts",
+  "concept_alignments",
+  "concept_relationships",
+  "depth_insights",
+  "depth_insight_concepts",
+  "depth_insight_links",
+  "vocabulary_items",
+  "vocabulary_item_historical_contexts",
+  "lexicon_entries",
+  "lexicon_articles",
+  "semantic_domains",
+  "linguistic_roots",
+  "linguistic_senses",
+  "sense_definitions",
+  "theological_dictionary_entries",
+  "strong_number_aliases",
+  "word_alignments",
+  "word_cards",
+
+  # Pericopes, outlines, structures
+  "pericope_units",
+  "pericope_excursus",
+  "pericope_unit_discourse_link",
+  "pericope_index",
+  "genre_sections",
+  "literary_structures",
+  "chiastic_structures",
+  "book_outlines",
+  "book_genres",
+  "book_genre_assignments",
+  "tocma_step2_clause_relations",
+  "tocma_step2_outline_nodes",
+  "tocma_pericope_synthesis",
+
+  # Commentary corpus
+  "commentary_applications",
+  "commentary_bibliography",
+  "commentary_cross_references",
+  "commentary_discourse_notes",
+  "commentary_excursuses",
+  "commentary_exegetical_outlines",
+  "commentary_footnotes",
+  "commentary_historical_context",
+  "commentary_lexicon_refs",
+  "commentary_literary_context",
+  "commentary_main_ideas",
+  "commentary_morphology_glosses",
+  "commentary_sources",
+  "commentary_textual_variants",
+  "commentator_positions",
+  "commentator_profiles",
+  "eggnt_sources",
+
+  # Reference graph + named entities
+  "ref_attestations",
+  "ref_entities",
+  "ref_entity_names",
+  "ref_entity_relations",
+  "ref_passage_entities",
+  "ref_sources",
+  "biblical_events",
+  "biblical_persons",
+  "biblical_places",
+  "biblical_regions",
+  "biblical_routes",
+  "historical_contexts",
+  "messianic_prophecies",
+  "prophecy_cross_references",
+  "verse_cross_references",
+  "ot_in_nt_quotations",
+  "geo_extraction_candidates",
+
+  # Textual criticism
+  "tc_apparatus",
+  "tc_apparatus_sigla",
+  "tc_gnt_witnesses",
+  "tc_issues",
+  "tc_lxx_verses",
+  "tc_masorah",
+  "tc_witnesses",
+  "textual_criticism_notes",
+  "masorah_glossary",
+  "nets_lxx",
+
+  # Grammar curriculum content (system-seeded)
+  "grammar_exercises",
+  "grammar_lessons",
+  "grammar_paradigm_cells",
+  "grammar_paradigm_templates",
+  "grammar_section_recaps",
+
+  # BHSA / misc parser outputs
+  "bhsa_features",
+]
+
+# ── Rule 2 ─────────────────────────────────────────────────────────────────
+# apps/api writes to `reading_plans` / `reading_plan_days` must originate in
+# a path-allowlisted partition writer. I-2 confirmed there are exactly two
+# legitimate writer paths in apps/api:
+#
+#   1. protected/community/influencer.rs — the 'influencer' partition. Every
+#      INSERT hardcodes `plan_type = 'influencer'`; every top-level
+#      UPDATE/DELETE is keyed to `created_by = auth.uid()`. Some follow-up
+#      total_days UPDATEs ("UPDATE reading_plans SET total_days ... WHERE
+#      id = $1::uuid") omit plan_type but sit inside a require_influencer()
+#      gate and are legitimate. Path-allowlisting this file avoids the
+#      false positive the plain `require_where_contains` check would create.
+#   2. admin/reading_plans.rs — cross-partition admin moderation, introduced
+#      by Subagent ε as the consolidated admin writer. The file does not
+#      exist yet at time of this commit; the allowlist entry lands ahead of
+#      ε's merge so that the lint stays green once ε's path appears.
+#
+# Any OTHER apps/api file that writes these tables is a domain violation.
+[[rule]]
+name = "apps/api reading_plans writers must be partition-allowlisted"
+paths = ["fellwork-api/apps/api/src/"]
+allow_paths = [
+  # Influencer partition writer (plan_type='influencer'). Per I-2 Case 2.
+  "fellwork-api/apps/api/src/routes/protected/community/influencer.rs",
+  # Cross-partition admin writer from Subagent ε. Lands post-merge.
+  "fellwork-api/apps/api/src/routes/admin/reading_plans.rs",
+  # Grandfathered dynamic-SQL files — see Rule 1 allowlist for rationale.
+  # None of these write reading_plans; allowlisting prevents the unresolvable
+  # fail-closed from double-flagging them here.
+  "fellwork-api/apps/api/src/routes/admin/coverage.rs",
+  "fellwork-api/apps/api/src/routes/admin/users.rs",
+  "fellwork-api/apps/api/src/routes/admin/grammar.rs",
+  "fellwork-api/apps/api/src/routes/admin/language.rs",
+  "fellwork-api/apps/api/src/routes/admin/pma_queue.rs",
+]
+forbid_targets = [
+  "reading_plans",
+  "reading_plan_days",
+]
+# No `require_where_contains` — the path allowlist is the enforcement
+# mechanism. If a new apps/api file writes reading_plans, the allowlist
+# must be extended explicitly (with a comment saying why).
+
+# ── Rule 3 ─────────────────────────────────────────────────────────────────
+# `fw-store::delete_predicate` must remain module-private. Currently declared
+# as a bare `fn delete_predicate(...)` at crates/fw-store/src/main.rs:668 —
+# that is the correct state. Rule 3 keeps it that way. Any future refactor
+# that exposes it as `pub fn`, `pub(crate) fn`, or `pub(in ...) fn` is
+# flagged. The function issues destructive `DELETE FROM phrased_blocks /
+# concepts / ...` SQL used only by disaster-recovery `fw-store restore`;
+# external callers would erase corpus rows from code outside a hash-guarded
+# entry point. See I-6 § Exception: fellwork_glosses + resolved_tokens.
+[[rule]]
+name = "fw-store::delete_predicate must stay module-private"
+kind = "rust_visibility"
+paths = ["fellwork-api/crates/fw-store/"]
+symbols = ["delete_predicate"]
+max_visibility = "private"
+
+# ── Rule 4 ─────────────────────────────────────────────────────────────────
+# `phrased_blocks` is written by exactly three crates:
+#
+#   1. fw-phrase — the authoritative deterministic engine (primary writer,
+#      last-write-wins per I-6 § Exception: phrased_blocks).
+#   2. fw-pipeline — AI-edge-case supplementary writes in the ingest flow.
+#   3. fw-store — disaster-recovery `DELETE FROM phrased_blocks WHERE
+#      passage_ref LIKE $1` followed by bulk re-INSERT from JSON archives.
+#      Gated by `delete_predicate` (Rule 3) and a content-hash check.
+#
+# Any new writer anywhere else — apps/api, apps/web, new crates, dormant
+# crates — is a domain violation. Rule 4 applies to the entire monorepo
+# under crates/ and apps/ because the table is authoritatively corpus.
+[[rule]]
+name = "phrased_blocks only from fw-phrase, fw-pipeline, fw-store"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # Primary deterministic engine. Per CLAUDE.md "Phrasing Engine".
+  "fellwork-api/crates/fw-phrase/",
+  # AI-edge-case writes in the ingest flow. Per I-4 § fw-pipeline.
+  "fellwork-api/crates/fw-pipeline/",
+  # Disaster-recovery restore. Per I-6 § Exception: fellwork_glosses.
+  "fellwork-api/crates/fw-store/",
+]
+forbid_targets = [
+  "phrased_blocks",
+]
+# Rule 4 has a very broad `paths` scope (every crate and app). Fail-closed
+# on runtime interpolation would flag every fw-graph-* introspection
+# query, every dynamic SELECT builder, every sqlx helper that calls
+# `sqlx::query(sql_string)` — none of which can target phrased_blocks
+# without a literal mention of the table name. Permit unresolvable
+# interpolation for this rule; the planted-violation test demonstrates
+# that a literal `INSERT INTO phrased_blocks` from a non-allowlisted path
+# is still flagged.
+allow_interpolation = true
+
+# ── Rule 5 ─────────────────────────────────────────────────────────────────
+# apps/web/layers/*/server/api/ Supabase-JS mutations may only target the
+# allowlist below. CORPUS writes are forbidden per
+# wiki/analyses/2026-04-20-apps-web-server-route-audit.md Rule F.
+#
+# The audit found six existing CORPUS-writing TS files (V-1 through V-6).
+# Post-Subagent ε migration, those six files are deleted. Rule 5 blocks
+# any NEW attempt to re-introduce CORPUS writes from the web layer.
+#
+# Denylist (CORPUS tables an apps/web server route must never write):
+#   - vocabulary_items          (V-2 — was generate-vocab-insights.post.ts)
+#   - grammar_lessons           (V-3 — was generate-lesson-enrichment.post.ts)
+#   - grammar_exercises         (V-4 — was grammar/generate.post.ts)
+#   - grammar_section_recaps    (V-4 — same file)
+#   - phrase_structure_nodes    (V-1 — was pma-queue/[id].patch.ts DELETE;
+#                                 note Plan v2 explicitly disallows the
+#                                 DELETE path from coming back)
+#   - All pure-CORPUS tables from Rule 1 above (full list duplicated so
+#     the TS scanner is self-contained; keep in sync manually).
+#
+# Allowlist (USER + documented partition/CONFIG tables) is NOT expressed
+# here; we use `forbid_targets` as a denylist so adding a new USER-domain
+# write doesn't require editing this file. The audit's Rule H ("no writes
+# outside the allowlist") is not implemented in Plan v2 — it would require
+# re-introspecting every TS route on every CI run and explicit allowlist
+# maintenance. Keeping the rule as a denylist matches Rule 1's shape.
+[[rule]]
+name = "apps/web server routes must not write CORPUS tables"
+kind = "ts"
+paths = ["fellwork-web/apps/web/layers/"]
+allow_paths = [
+  # ──────────────────────────────────────────────────────────────────────
+  # GRANDFATHERED: V-1 through V-6 CORPUS violations from the audit.
+  # Framing A from 2026-04-20-apps-web-server-route-audit.md §
+  # Recommendation: "Current violations grandfathered via explicit file
+  # allowlist until migrated; lint fails on new violations." Subagent ε's
+  # C.1 migration deletes these files. Remove each allowlist entry the
+  # moment the corresponding file is deleted — after ε merges, this list
+  # should shrink to empty. If a file here is edited (not deleted), the
+  # lint still runs against it — keep the entry only to suppress the
+  # pre-existing CORPUS write, not to green-light new ones.
+  # ──────────────────────────────────────────────────────────────────────
+  # V-4: grammar/generate.post.ts writes grammar_exercises +
+  # grammar_section_recaps via Anthropic runtime AI. 337 lines.
+  "fellwork-web/apps/web/layers/admin/server/api/admin/grammar/generate.post.ts",
+  # V-3: language/generate-lesson-enrichment.post.ts updates
+  # grammar_lessons.content JSONB at runtime.
+  "fellwork-web/apps/web/layers/admin/server/api/admin/language/generate-lesson-enrichment.post.ts",
+  # V-2: language/generate-vocab-insights.post.ts updates
+  # vocabulary_items.ai_insight (15k-row corpus) at runtime.
+  "fellwork-web/apps/web/layers/admin/server/api/admin/language/generate-vocab-insights.post.ts",
+  # V-1: pma-queue/[id].patch.ts DELETEs from phrase_structure_nodes on
+  # reject. Partitioned by source='fellwork-pma' but still a corpus write.
+  "fellwork-web/apps/web/layers/admin/server/api/admin/pma-queue/[id].patch.ts",
+  # Not in V-1..V-6 but surfaced by this linter: admin-layer composable
+  # (NOT a server route, despite the regex match) performs client-side
+  # .delete() on grammar_exercises / grammar_section_recaps. Grandfather
+  # until the admin UI is reworked to invoke a CLI.
+  "fellwork-web/apps/web/layers/admin/app/composables/useGrammarAdmin.ts",
+]
+forbid_targets = [
+  # CORPUS (from audit V-1 through V-6 and the Rule 1 denylist above).
+  # Duplicated intentionally — this is the TS-side scanner; it does not
+  # share state with Rule 1. Keep in sync manually.
+
+  # Biblical text substrate
+  "passages",
+  "passage_tokens",
+  "english_tokens",
+  "kjv_tokens",
+  "stepbible_tokens",
+  "passage_translations",
+  "contextual_translations",
+
+  # Phrased blocks + syntax (V-1 specifically denies phrase_structure_nodes)
+  "phrased_blocks",
+  "phrase_structure_nodes",
+  "chapter_phrased_blocks",
+
+  # fw-phrase / Macula / SBLGNT discourse
+  "pm_clauses",
+  "pm_cic_nodes",
+  "pm_phrase_nodes",
+  "pm_segments",
+  "pm_annotations",
+  "pm_discourse_units",
+  "pm_canonical_tags",
+  "pm_discontinuity_links",
+  "pm_gnt_discourse_tags",
+  "pm_gnt_genitive_absolutes",
+  "pm_gnt_info_structure",
+  "pm_gnt_louw_nida_domains",
+  "pm_gnt_periphrastics",
+  "pm_gnt_referent_mentions",
+  "pm_gnt_referents",
+  "pm_gnt_variants",
+  "pm_multidominance_links",
+  "pm_parse_alt_cics",
+  "pm_parse_alternatives",
+  "psn_annotations",
+  "discourse_annotations",
+
+  # Translation + rendering
+  "fellwork_glosses",
+  "resolved_tokens",
+  "rendered_verses",
+  "translation_renderings",
+  "translation_verses",
+  "translation_profiles",
+  "translation_fingerprints",
+  "translation_comparisons",
+  "translation_rendering_patterns",
+  "esv_strongs_alignment",
+  "lxx_word_alignments",
+  "gloss_overrides",
+
+  # Concepts + depth insights + alignments
+  "concepts",
+  "concept_alignments",
+  "concept_relationships",
+  "depth_insights",
+  "depth_insight_concepts",
+  "depth_insight_links",
+  # vocabulary_items — V-2
+  "vocabulary_items",
+  "vocabulary_item_historical_contexts",
+  "lexicon_entries",
+  "lexicon_articles",
+  "semantic_domains",
+  "linguistic_roots",
+  "linguistic_senses",
+  "sense_definitions",
+  "theological_dictionary_entries",
+  "strong_number_aliases",
+  "word_alignments",
+  "word_cards",
+  "word_study_entries",
+
+  # Pericopes, outlines, structures
+  "pericope_units",
+  "pericope_excursus",
+  "pericope_unit_discourse_link",
+  "pericope_index",
+  "genre_sections",
+  "literary_structures",
+  "chiastic_structures",
+  "book_outlines",
+  "book_genres",
+  "book_genre_assignments",
+  "tocma_step2_clause_relations",
+  "tocma_step2_outline_nodes",
+  "tocma_pericope_synthesis",
+
+  # Commentary corpus
+  "commentary_applications",
+  "commentary_bibliography",
+  "commentary_cross_references",
+  "commentary_discourse_notes",
+  "commentary_excursuses",
+  "commentary_exegetical_outlines",
+  "commentary_footnotes",
+  "commentary_historical_context",
+  "commentary_lexicon_refs",
+  "commentary_literary_context",
+  "commentary_main_ideas",
+  "commentary_morphology_glosses",
+  "commentary_sources",
+  "commentary_textual_variants",
+  "commentator_positions",
+  "commentator_profiles",
+  "eggnt_sources",
+
+  # Reference graph + named entities
+  "ref_attestations",
+  "ref_entities",
+  "ref_entity_names",
+  "ref_entity_relations",
+  "ref_passage_entities",
+  "ref_sources",
+  "biblical_events",
+  "biblical_persons",
+  "biblical_places",
+  "biblical_regions",
+  "biblical_routes",
+  "historical_contexts",
+  "messianic_prophecies",
+  "prophecy_cross_references",
+  "verse_cross_references",
+  "ot_in_nt_quotations",
+  "geo_extraction_candidates",
+
+  # Textual criticism
+  "tc_apparatus",
+  "tc_apparatus_sigla",
+  "tc_gnt_witnesses",
+  "tc_issues",
+  "tc_lxx_verses",
+  "tc_masorah",
+  "tc_witnesses",
+  "textual_criticism_notes",
+  "masorah_glossary",
+  "nets_lxx",
+
+  # Grammar curriculum content (V-3, V-4)
+  "grammar_exercises",
+  "grammar_lessons",
+  "grammar_paradigm_cells",
+  "grammar_paradigm_templates",
+  "grammar_section_recaps",
+
+  # BHSA / misc parser outputs
+  "bhsa_features",
+]
+# The audit's Rule G notes that `reading_plans` / `reading_plan_days` are
+# legitimately written by the admin Nuxt routes (cross-partition admin).
+# They are NOT in `forbid_targets` above; Rule 2 governs apps/api's writes
+# to them. If Framing B from the audit is ever chosen (migrate apps/web
+# admin writes to apps/api), add them here.
+
+# plugin_registry, feature_tier_overrides, user_feature_overrides are CONFIG
+# per the audit recommendation — intentionally NOT on the denylist. If I-6
+# is updated to make them CORPUS, add them here.
+
+# ── Rule 6.1 ───────────────────────────────────────────────────────────────
+# corpus_chunks + chunk_tokens writable only by fw-chunker. Per the chunk
+# translation engine design: "fw-chunker (new) — deterministic chunker.
+# Input: phrase_structure_nodes + genre. Output: corpus_chunks, chunk_tokens."
+# Path allowlist is empty until the crate is scaffolded in Phase 2; every
+# runtime write is correctly blocked today.
+[[rule]]
+name = "corpus_chunks/chunk_tokens only from fw-chunker"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # Phase 2 scaffolding will land this crate. Add the path here at that time.
+  # "fellwork-api/crates/fw-chunker/",
+]
+forbid_targets = [
+  "corpus_chunks",
+  "chunk_tokens",
+]
+allow_interpolation = true
+
+# ── Rule 6.2 ───────────────────────────────────────────────────────────────
+# chunk_lexicon_context writable only by fw-lexicon-resolver. This table
+# replaces fellwork_glosses post-phase-4; the word-detail reader switches
+# to reading from it directly (see Rule 8 below).
+[[rule]]
+name = "chunk_lexicon_context only from fw-lexicon-resolver"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # Phase 3 will scaffold this crate. Empty allowlist until then.
+  # "fellwork-api/crates/fw-lexicon-resolver/",
+]
+forbid_targets = ["chunk_lexicon_context"]
+allow_interpolation = true
+
+# ── Rule 6.3 ───────────────────────────────────────────────────────────────
+# chunk_renderings writable only by fw-clause-render. This is the candidate
+# writer; canonical picks live in canonical_renderings (Rule 6.4).
+[[rule]]
+name = "chunk_renderings only from fw-clause-render"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # "fellwork-api/crates/fw-clause-render/",
+]
+forbid_targets = ["chunk_renderings"]
+allow_interpolation = true
+
+# ── Rule 6.4 ───────────────────────────────────────────────────────────────
+# canonical_renderings writable only by fw-translate (repurposed orchestrator).
+# The canonize step is the sole writer.
+[[rule]]
+name = "canonical_renderings only from fw-translate orchestrator"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # The existing fw-translate crate will be repurposed in Phase 3. Until
+  # then, block every write.
+  # "fellwork-api/crates/fw-translate/",
+]
+forbid_targets = ["canonical_renderings"]
+allow_interpolation = true
+
+# ── Rule 6.5 ───────────────────────────────────────────────────────────────
+# verse_coherency_reports writable only by fw-coherency. verify_verse is
+# the sole producer.
+[[rule]]
+name = "verse_coherency_reports only from fw-coherency"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # "fellwork-api/crates/fw-coherency/",
+]
+forbid_targets = ["verse_coherency_reports"]
+allow_interpolation = true
+
+# ── Rule 6.6 ───────────────────────────────────────────────────────────────
+# rendering_rules is seed/admin-tool-only. NO runtime crate may write it.
+# The rule catalog is data, not code; runtime reads it read-only. The admin
+# path has not been named yet (tracked in wiki/plans/2026-04-23-chunk-
+# translation-engine-design.md open questions — Phase 3 will decide whether
+# this is fw-rules-admin, a fw-store subcommand, or an apps/api admin route).
+# Until named, the empty allow_paths means every write is blocked.
+[[rule]]
+name = "rendering_rules only from admin/seed tooling"
+paths = ["fellwork-api/crates/", "fellwork-api/apps/", "apps/"]
+allow_paths = [
+  # Empty at plan time. Add admin CLI path when tooling lands in Phase 3.
+]
+forbid_targets = ["rendering_rules"]
+allow_interpolation = true
+
+# ── Rule 7 (grep) ──────────────────────────────────────────────────────────
+# Engine crates must not reference non-Fellwork English translation
+# infrastructure. Captures imports, SQL strings, identifier mentions — any
+# textual reference to BSB/LSB/ESV/NIV/NLT/KJV/NET tables, loaders, or
+# symbols. See wiki/plans/2026-04-23-chunk-translation-engine-design.md
+# Principle 6 ("No other translations as input"). Uses RuleKind::SourceGrep
+# added in Phase 0.A (commit 29de9f7).
+#
+# NOTE: fellwork-api/crates/fw-translate/ is intentionally NOT in `paths`
+# yet — the existing crate reads english_tokens for BSB diffs. Phase 3
+# repurposes fw-translate as the chunk-first orchestrator and deletes
+# those reads; at that time, add "fellwork-api/crates/fw-translate/" back
+# into both Rule 7 blocks' paths lists.
+[[rule]]
+name = "engine crates must not reference non-Fellwork translations"
+kind = "source_grep"
+paths = [
+  # Crates listed whether or not they currently exist; Phase 3 scaffolds
+  # them and Rule 7 starts firing immediately upon their creation.
+  "fellwork-api/crates/fw-chunker/",
+  "fellwork-api/crates/fw-lexicon-resolver/",
+  "fellwork-api/crates/fw-rules/",
+  "fellwork-api/crates/fw-idiom/",
+  "fellwork-api/crates/fw-clause-render/",
+  "fellwork-api/crates/fw-coherency/",
+  # fw-translate/ excluded until Phase 3 purge — see NOTE above.
+]
+patterns = [
+  # BSB and sibling translation tables in the corpus
+  "english_tokens",
+  "kjv_tokens",
+  "stepbible_tokens",
+  "passage_translations",
+  "contextual_translations",
+  "translation_parallels",
+  "translation_verses",
+  "translation_renderings",
+  "translation_comparisons",
+  "translation_profiles",
+  "esv_strongs_alignment",
+  "lxx_word_alignments",
+  # Module-name hints — an engine crate importing a bsb loader is wrong
+  "fw_bsb",
+  "fw_english_tokens",
+  # Translation-acronym literals. False-positive risk is low; an engine
+  # crate with the string "ESV" in its source is almost certainly wrong.
+  "BSB",
+  "LSB",
+  "ESV",
+  "NIV",
+  "NLT",
+  "KJV",
+  "NET",
+]
+file_extensions = ["rs"]
+
+# ── Rule 7 (rust check_reads) ──────────────────────────────────────────────
+# Companion to Rule 7 grep. The grep catches literal references; this
+# catches SQL SELECT targets. Uses the check_reads flag added in Phase 0.A
+# (commit 3353ecc) and honoring require_where_contains per commit f736099.
+# Same fw-translate/ exclusion as Rule 7 grep — see NOTE above.
+[[rule]]
+name = "engine crates must not SELECT translation tables"
+paths = [
+  "fellwork-api/crates/fw-chunker/",
+  "fellwork-api/crates/fw-lexicon-resolver/",
+  "fellwork-api/crates/fw-rules/",
+  "fellwork-api/crates/fw-idiom/",
+  "fellwork-api/crates/fw-clause-render/",
+  "fellwork-api/crates/fw-coherency/",
+  # fw-translate/ excluded until Phase 3 purge — see NOTE above Rule 7 grep.
+]
+forbid_targets = [
+  "english_tokens",
+  "kjv_tokens",
+  "stepbible_tokens",
+  "passage_translations",
+  "contextual_translations",
+  "translation_parallels",
+  "translation_verses",
+  "translation_renderings",
+  "translation_comparisons",
+  "translation_profiles",
+  "esv_strongs_alignment",
+  "lxx_word_alignments",
+]
+check_reads = true
+allow_interpolation = true
+
+# ── Rule 8.a ───────────────────────────────────────────────────────────────
+# Rust word-detail resolvers must not reference fellwork_glosses (retired
+# post-phase-4). The word-detail GraphQL resolver lives in fw-graph-build;
+# tap-a-word reads chunk_lexicon_context directly. Any fellwork_glosses
+# reference in this path is either a regression or a ghost query against a
+# table that will soon be gone.
+[[rule]]
+name = "WordDetail resolvers must not reference fellwork_glosses"
+kind = "source_grep"
+paths = [
+  "fellwork-api/crates/fw-graph-build/src/resolve/reader.rs",
+  "fellwork-api/crates/fw-graph-build/src/resolve/word_detail/",
+]
+patterns = [
+  "fellwork_glosses",
+  # Plausible reintroduction names to guard against
+  "per_token_glosses",
+  "token_glosses",
+  "gloss_table",
+]
+file_extensions = ["rs"]
+
+# ── Rule 8.b ───────────────────────────────────────────────────────────────
+# TypeScript word-detail code (apps/web tap-a-word composables, Vue
+# components, server routes) must not reference fellwork_glosses either.
+[[rule]]
+name = "apps/web word-detail must not reference fellwork_glosses"
+kind = "source_grep"
+paths = [
+  "fellwork-web/apps/web/layers/reader/",
+  "fellwork-web/apps/web/composables/useWordDetail",
+  "fellwork-web/apps/web/components/Reader/WordDetail",
+]
+patterns = [
+  "fellwork_glosses",
+  "per_token_glosses",
+  "token_glosses",
+  "gloss_table",
+]
+file_extensions = ["ts", "mts", "vue"]
+
+# ── Rule 8.c ───────────────────────────────────────────────────────────────
+# Rust SQL-target guard: if a word-detail resolver tries to SELECT FROM
+# fellwork_glosses specifically (vs. just mentioning the name in a string
+# that 8.a already catches), this rule fires via check_reads on sqlx calls.
+# Narrow path — only the resolver modules, not the whole crate, so we don't
+# accidentally cover the Chapter reader resolver which has its own contract.
+[[rule]]
+name = "WordDetail resolvers must not SELECT fellwork_glosses"
+paths = ["fellwork-api/crates/fw-graph-build/src/resolve/"]
+forbid_targets = ["fellwork_glosses"]
+check_reads = true
+allow_interpolation = true

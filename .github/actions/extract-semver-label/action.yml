@@ -1,0 +1,26 @@
+name: 'Extract semver label'
+description: 'Read semver:* labels off the merged PR and emit them as outputs'
+outputs:
+  bump:
+    description: 'Bump kind: major | minor | patch | canary | none'
+    value: ${{ steps.extract.outputs.bump }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Extract from PR labels
+      id: extract
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        labels=$(gh pr view ${{ github.event.pull_request.number || github.event.number }} --json labels --jq '.labels[].name' || echo "")
+        bump="none"
+        for label in $labels; do
+          case "$label" in
+            semver:major) bump="major" ;;
+            semver:minor) bump="minor" ;;
+            semver:patch) bump="patch" ;;
+            semver:canary) bump="canary" ;;
+          esac
+        done
+        echo "bump=$bump" >> $GITHUB_OUTPUT

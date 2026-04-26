@@ -1,0 +1,31 @@
+name: Verify repo shape
+
+on:
+  workflow_call:
+    inputs:
+      kind:
+        description: 'Repo kind (must match a kind in fellwork/shared-configs/kinds/)'
+        required: true
+        type: string
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: consumer
+
+      - uses: actions/checkout@v4
+        with:
+          repository: fellwork/shared-configs
+          ref: v1
+          path: shared-configs
+
+      - uses: fellwork/shared-configs/.github/actions/setup-bun-biome@v1
+
+      - name: Run repo-shape verifier
+        working-directory: shared-configs
+        run: bun run tools/verify-repo-shape.ts --kind ${{ inputs.kind }} --repo ../consumer
