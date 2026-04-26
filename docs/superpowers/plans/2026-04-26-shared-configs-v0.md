@@ -1597,7 +1597,7 @@ tasks:
       - '*.json'
 
   test:
-    command: 'bun run -e "import(\"./index.js\").then(m => { if (!m.default.rules) process.exit(1); })"'
+    command: 'bun -e "import(\"./index.js\").then(m => { if (!m.default.rules) process.exit(1); })"'
     inputs:
       - 'index.js'
 
