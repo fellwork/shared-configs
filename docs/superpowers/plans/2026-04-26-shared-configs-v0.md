@@ -751,11 +751,16 @@ Write this exact content (preserved from `c:/git/fellwork/tsconfig/base.json`):
       "optional": false
     }
   },
+  "devDependencies": {
+    "@types/node": "^25.6.0"
+  },
   "scripts": {
     "validate": "bun run scripts/validate.ts"
   }
 }
 ```
+
+> **Note:** `@types/node` is required for the `node` and `node-library` fixtures' source files (which import from `node:fs/promises` etc.). The fixtures will fail with `TS2307: Cannot find module 'node:fs/promises'` without it.
 
 - [ ] **Step 2: Write `packages/tsconfig/CHANGELOG.md`**
 
@@ -905,6 +910,7 @@ Expected: passes.
 
 **Files:**
 - Modify: `c:/git/fellwork-worktrees/shared-configs-v0/tsconfig.json`
+- Modify: `c:/git/fellwork-worktrees/shared-configs-v0/package.json` (add workspace devDep)
 
 - [ ] **Step 1: Replace the root `tsconfig.json`**
 
@@ -921,7 +927,24 @@ Write this exact content (replaces the hand-written version from Task 0.4):
 }
 ```
 
-- [ ] **Step 2: Verify TypeScript can resolve the extends**
+- [ ] **Step 2: Add the workspace package as a root devDependency**
+
+Edit the root `package.json` to add `"@fellwork/tsconfig": "workspace:*"` to `devDependencies`. Bun does NOT create a `node_modules/@fellwork/tsconfig` symlink automatically just because the package is in the workspace — the root must depend on it explicitly. Without this, `tsc` cannot resolve `"extends": "@fellwork/tsconfig/node"` because tsc reads from `node_modules/`, not bun's internal workspace registry.
+
+After editing, the root devDependencies should look like:
+
+```json
+"devDependencies": {
+  "@biomejs/biome": "2.4.13",
+  "@changesets/cli": "^2.27.0",
+  "@changesets/changelog-github": "^0.5.0",
+  "@fellwork/tsconfig": "workspace:*",
+  "oxlint": "^0.15.0",
+  "typescript": "^5.6.2"
+}
+```
+
+- [ ] **Step 3: Verify TypeScript can resolve the extends**
 
 ```bash
 cd c:/git/fellwork-worktrees/shared-configs-v0
