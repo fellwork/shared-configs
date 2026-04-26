@@ -452,6 +452,86 @@ Archive on GitHub. Add redirect README pointing to `shared-configs`.
 
 ---
 
+## 8. Ecosystem layout — bootstrap, foreman, shared-configs
+
+The Fellwork dev platform is a three-repo triangle. Each layer has one job
+and one set of consumers:
+
+| Repo | Layer | Owns | Consumed by |
+|---|---|---|---|
+| `shared-configs` | Source of truth | Configs (npm packages, templates, workflows), kind manifests | `foreman`, `bootstrap` (planned), every Fellwork repo's CI |
+| `foreman` | Per-repo scaffolder | New-repo creation, single-repo template sync, `.foreman.lock` | Developers running `foreman new` / `foreman adopt` / `foreman sync`; `bootstrap` (for fleet-wide sync) |
+| `bootstrap` | Fleet orchestrator | Multi-repo clone, environment validation, fleet healing | Developers setting up or maintaining a Fellwork dev environment |
+
+`shared-configs` knows about neither of the other two — it just publishes
+artifacts. `foreman` reads `shared-configs` directly. `bootstrap` calls
+`foreman` for sync ops and (in the future) reads `shared-configs/kinds/`
+for fleet-wide drift detection.
+
+### `fellwork/bootstrap` — the dev environment loader and fleet healer
+
+Responsibilities:
+
+1. **Workspace loader.** `bootstrap up` ensures every Fellwork sibling
+   repo (`api`, `web`, `ops`, `scribe`, `shared-configs`, `foreman`,
+   `lint`, `tsconfig`, etc. — the canonical list lives in bootstrap's
+   own config) is cloned at its expected path, on its expected branch,
+   and pulled to current.
+2. **Environment readiness check.** `bootstrap doctor` verifies the
+   developer's machine satisfies every cloned repo's tooling pins. For
+   each repo it reads `.prototools` and confirms the right `bun`,
+   `node`, `moon`, `rust`, etc. versions are installed and active.
+   Reports per-repo pass/fail.
+3. **CI parity check.** `bootstrap ci` runs each repo's CI pipeline
+   locally (e.g., `moon run :ci` per repo) and produces a fleet-wide
+   pass/fail dashboard. Helps catch drift before pushing.
+4. **Repo healing.** `bootstrap heal` detects and fixes drift —
+   wrong tool versions get reinstalled via `proto`, missing deps get
+   re-installed, and (in the future, see point 5) outdated configs
+   get re-synced.
+5. **Future: kinds-aware healing.** When integrated with
+   `shared-configs/kinds/`, `bootstrap heal` will read each repo's
+   `.foreman.lock` to find its kind, fetch the kind manifest from
+   `shared-configs`, and invoke `foreman sync` to bring stale
+   templates up to date — effectively `cruft update` applied across
+   the fleet.
+
+### Integration seam (planned, not v0)
+
+The integration between `bootstrap` and `shared-configs` runs through
+two interfaces that already exist (or will, in v0):
+
+- **`.foreman.lock`** — written by `foreman` when scaffolding or
+  adopting a repo. Records the kind and the `shared-configs` SHA the
+  repo was scaffolded from. `bootstrap` reads this to know what each
+  repo claims to be.
+- **`kinds/*.yaml`** — already canonical in `shared-configs` v0.
+  `bootstrap` reads them to know what each kind *should* contain, then
+  reconciles against the repo's actual state.
+
+This means **no v0 work in `shared-configs` is needed to enable
+bootstrap integration**. Bootstrap can adopt the integration on its
+own schedule.
+
+### What is *not* in scope for `shared-configs`
+
+`shared-configs` does not own:
+
+- The list of canonical Fellwork repos (`api`, `web`, etc.) — that's
+  bootstrap's config.
+- Tool installation (`proto use` orchestration) — that's bootstrap's
+  job, possibly via the `proto` CLI directly.
+- The local-laptop file system layout (`c:/git/fellwork/...`) — also
+  bootstrap.
+
+### Implementation status
+
+`fellwork/bootstrap` is its own future spec/plan. This section
+documents the *contract* `shared-configs` exposes so bootstrap can
+consume it, not bootstrap's internals.
+
+---
+
 ## Appendix A — Decisions log
 
 | # | Decision | Rationale |
@@ -468,6 +548,8 @@ Archive on GitHub. Add redirect README pointing to `shared-configs`.
 | 10 | npm trusted publishing (OIDC) for all CI publishes; no `NPM_TOKEN` secret anywhere | Eliminates leaked-token blast radius; every publish credential is short-lived and one-time-use |
 | 11 | First-publish bootstrap uses a local granular token in `.env` (laptop only, never CI) | Trusted publishing requires the package to exist on npmjs.com first; the bootstrap is the only time a token is held, and it lives outside CI |
 | 12 | Reusable `npm-release.yml` is strictly OIDC-only, no `NPM_TOKEN` input | Forces consumer repos onto the secure path; edge cases fork the workflow rather than weakening the shared one |
+| 13 | Three-repo platform triangle: `shared-configs` (source of truth) + `foreman` (per-repo scaffolder) + `bootstrap` (fleet orchestrator) | Each layer has one job and one set of consumers; bootstrap reads `kinds/` and consumer `.foreman.lock` files but writes neither — keeps `shared-configs` unaware of the layers above it |
+| 14 | Bootstrap integration requires zero v0 work in `shared-configs` | The contract (`kinds/*.yaml` + `.foreman.lock`) already exists; bootstrap can adopt it on its own schedule without blocking shared-configs v0 |
 
 ---
 
@@ -486,3 +568,11 @@ implementation will resolve them.
 - **Whether `kinds/_schema.json` lives in shared-configs or foreman** —
   defaulting to shared-configs (it describes shared-configs's own data
   shape), but foreman's parser may want a typed version too.
+- **When does `bootstrap` gain kinds awareness?** — deferred. The
+  integration seam (§8) is documented, but adopting it is owned by
+  bootstrap's own design cycle. Until then, `bootstrap heal` does only
+  tool-pin and dependency reconciliation; config-template reconciliation
+  remains a manual `foreman sync` invocation per repo.
+- **Bootstrap's canonical repo list** — owned by bootstrap, not
+  shared-configs. shared-configs does not enumerate the Fellwork repo
+  fleet anywhere in its source.
