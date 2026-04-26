@@ -3259,10 +3259,10 @@ Consumer-side CI snippet (in `fellwork/api/.github/workflows/ci.yml`):
       https://raw.githubusercontent.com/fellwork/shared-configs/${DOMAIN_LINT_TAG}/templates/rust/.fw-domain-lint.toml \
       -o .fw-domain-lint.toml
   env:
-    DOMAIN_LINT_TAG: 'domain-lint-v3'
+    DOMAIN_LINT_TAG: 'domain-lint-v1'
 ```
 
-The `domain-lint-v3` tag is bumped from this repo when rules change. Renovate's `github-actions` manager bumps the tag in consumer workflows automatically.
+The `domain-lint-v1` tag is bumped from this repo when rules change. Renovate's `github-actions` manager bumps the tag in consumer workflows automatically.
 
 ## Updates
 
@@ -3892,7 +3892,8 @@ packages:
     - '@fellwork/lefthook-config'
     - '@fellwork/cspell-config'
     - '@fellwork/markdownlint-config'
-    - 'changesets'
+    - '@changesets/cli'
+    - '@changesets/changelog-github'
     - 'bumpp'
   peerDependencies:
     - { name: 'typescript', version: '>=5.5.0' }
