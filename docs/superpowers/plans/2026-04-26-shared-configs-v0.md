@@ -949,9 +949,11 @@ After editing, the root devDependencies should look like:
 ```bash
 cd c:/git/fellwork-worktrees/shared-configs-v0
 bun install
-bunx tsc --showConfig
+ls node_modules/@fellwork/tsconfig/base.json
 ```
-Expected: prints the merged config showing the strict flags from base.json. If `tsc --showConfig` errors with "cannot find module @fellwork/tsconfig/node", run `bun install` again — bun's workspace linker resolves on next install.
+Expected: lists the file (workspace symlink resolved). If `ls` says "No such file or directory", bun did not create the symlink — re-run `bun install` and verify root `package.json` has `@fellwork/tsconfig: "workspace:*"` in devDependencies.
+
+> **Note:** `bunx tsc --showConfig` is NOT a useful verification here because the root tsconfig's `include: ["scripts/**/*.ts", "tools/**/*.ts"]` references directories that won't exist until Phase 7 (which creates `tools/verify-repo-shape.ts`). Until then, `tsc --showConfig` errors with TS18003 ("No inputs were found"). The symlink check above proves the same thing tsc would: `@fellwork/tsconfig/node` is reachable.
 
 ### Task 1.9: Add the changeset and commit Phase 1
 
