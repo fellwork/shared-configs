@@ -1,0 +1,28 @@
+name: cargo publish
+
+on:
+  workflow_call:
+    inputs:
+      crate-path:
+        description: 'Path to the crate to publish'
+        required: true
+        type: string
+    secrets:
+      CARGO_REGISTRY_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: fellwork/shared-configs/.github/actions/setup-rust-toolchain@v1
+
+      - name: cargo publish
+        working-directory: ${{ inputs.crate-path }}
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish

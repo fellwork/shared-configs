@@ -1,0 +1,39 @@
+name: TS CI
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node version'
+        required: false
+        type: string
+        default: '22'
+      bun-version:
+        description: 'Bun version'
+        required: false
+        type: string
+        default: '1.1.42'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: fellwork/shared-configs/.github/actions/setup-bun-biome@v1
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Biome check
+        run: bunx biome check .
+
+      - name: Oxlint
+        run: bunx oxlint || true
+
+      - name: TypeScript
+        run: bunx tsc --noEmit
+
+      - name: Tests
+        run: bun test

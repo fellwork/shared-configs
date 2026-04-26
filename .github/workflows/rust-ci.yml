@@ -1,0 +1,35 @@
+name: Rust CI
+
+on:
+  workflow_call:
+    inputs:
+      domain-lint-tag:
+        description: 'shared-configs tag for .fw-domain-lint.toml fetch'
+        required: false
+        type: string
+        default: 'domain-lint-v1'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: fellwork/shared-configs/.github/actions/setup-rust-toolchain@v1
+
+      - name: Fetch shared domain-lint config
+        run: |
+          curl -sSL \
+            https://raw.githubusercontent.com/fellwork/shared-configs/${{ inputs.domain-lint-tag }}/templates/rust/.fw-domain-lint.toml \
+            -o .fw-domain-lint.toml
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace

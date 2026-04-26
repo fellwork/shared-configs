@@ -1,0 +1,39 @@
+name: 'Setup Rust Toolchain'
+description: 'Install Rust via rust-toolchain.toml and cache the build'
+inputs:
+  components:
+    description: 'Comma-separated list of components (overrides rust-toolchain.toml)'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Install rustup
+      shell: bash
+      run: |
+        if ! command -v rustup &>/dev/null; then
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        fi
+
+    - name: Install toolchain from rust-toolchain.toml
+      shell: bash
+      run: rustup show
+
+    - name: Install extra components
+      if: ${{ inputs.components != '' }}
+      shell: bash
+      run: rustup component add ${{ inputs.components }}
+
+    - name: Cache cargo
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-

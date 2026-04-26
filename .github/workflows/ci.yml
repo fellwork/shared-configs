@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+
+jobs:
+  ts:
+    uses: ./.github/workflows/ts-ci.yml
+
+  shape:
+    uses: ./.github/workflows/verify-repo-shape.yml
+    with:
+      kind: 'ts-application'
