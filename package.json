@@ -3,7 +3,9 @@
   "description": "Canonical home for shared developer configs across the Fellwork ecosystem",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
     "bun": ">=1.1.0"
   },
