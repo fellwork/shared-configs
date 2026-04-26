@@ -1,0 +1,21 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+tasks:
+  ci:
+    command: 'noop'
+    deps:
+      - '~:check'
+      - 'packages.*:check'
+      - 'packages.*:test'
+
+  check:
+    command: 'bunx biome check .'
+    inputs:
+      - '**/*.{json,jsonc,ts,tsx,md,yaml,yml}'
+      - '!packages/**'
+      - '!templates/**'
+
+  release:
+    command: 'bunx changeset publish'
+    options:
+      runInCI: false
