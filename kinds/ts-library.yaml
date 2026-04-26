@@ -1,0 +1,49 @@
+kind: ts-library
+description: A TypeScript library published to npm
+
+packages:
+  devDependencies:
+    - '@fellwork/tsconfig'
+    - '@fellwork/biome-config'
+    - '@fellwork/oxlint-config'
+    - '@fellwork/commitlint-config'
+    - '@fellwork/release-config'
+    - '@fellwork/lefthook-config'
+    - '@fellwork/cspell-config'
+    - '@fellwork/markdownlint-config'
+    - 'changesets'
+    - 'bumpp'
+  peerDependencies:
+    - { name: 'typescript', version: '>=5.5.0' }
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/node
+  - vscode/
+  - claude/
+  - bunfig.toml
+  - 'README.md.tmpl@ts-library'
+  - dependabot.yml
+
+tsconfig:
+  extends:
+    - '@fellwork/tsconfig/node'
+    - '@fellwork/tsconfig/library'
+  include:
+    - 'src/**/*.ts'
+
+workflows:
+  - 'ts-ci.yml@v1'
+  - 'npm-release.yml@v1'
+  - 'semver-label-check.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'
+
+scripts:
+  build: 'bun run scripts/build.ts'
+  test: 'bun test'
+  lint: 'biome check . && oxlint .'

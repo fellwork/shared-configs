@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@fellwork/tsconfig/node",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["@types/bun"],
+    "moduleResolution": "Bundler",
+    "module": "ESNext"
+  }
+}

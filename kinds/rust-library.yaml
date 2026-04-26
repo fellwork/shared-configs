@@ -1,0 +1,27 @@
+kind: rust-library
+description: A single-crate Rust library published to crates.io
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/rust
+  - vscode/
+  - claude/
+  - rust/
+  - 'README.md.tmpl@rust-library'
+  - dependabot.yml
+
+cargo:
+  package:
+    edition: '2021'
+    license: 'MIT'
+
+workflows:
+  - 'rust-ci.yml@v1'
+  - 'cargo-publish.yml@v1'
+  - 'semver-label-check.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'

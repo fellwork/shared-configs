@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/fellwork/shared-configs/blob/main/kinds/_schema.json",
+  "title": "Fellwork repo-kind manifest",
+  "type": "object",
+  "required": ["kind", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kind identifier; must match the filename (without .yaml)."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extends": {
+      "type": "string",
+      "description": "Parent manifest to compose from. Resolved relative to kinds/."
+    },
+    "packages": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "devDependencies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "peerDependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "version"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Template paths relative to templates/. May include @<variant> suffix."
+    },
+    "tsconfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "extends": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "include": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "cargo": {
+      "type": "object",
+      "description": "Cargo.toml shape for Rust kinds",
+      "additionalProperties": true
+    },
+    "workflows": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Reusable workflow names with @<tag> suffix"
+    },
+    "renovate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "extends": { "type": "string" }
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

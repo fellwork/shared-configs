@@ -1,0 +1,42 @@
+kind: ts-application
+description: A TypeScript application or CLI (no npm publish)
+
+packages:
+  devDependencies:
+    - '@fellwork/tsconfig'
+    - '@fellwork/biome-config'
+    - '@fellwork/oxlint-config'
+    - '@fellwork/commitlint-config'
+    - '@fellwork/lefthook-config'
+    - '@fellwork/cspell-config'
+    - '@fellwork/markdownlint-config'
+  peerDependencies:
+    - { name: 'typescript', version: '>=5.5.0' }
+
+templates:
+  - community-health/
+  - editorconfig
+  - gitattributes
+  - gitignore/node
+  - vscode/
+  - claude/
+  - bunfig.toml
+  - 'README.md.tmpl@ts-application'
+  - dependabot.yml
+
+tsconfig:
+  extends:
+    - '@fellwork/tsconfig/node'
+  include:
+    - 'src/**/*.ts'
+
+workflows:
+  - 'ts-ci.yml@v1'
+  - 'verify-repo-shape.yml@v1'
+
+renovate:
+  extends: '@fellwork/renovate-config'
+
+scripts:
+  test: 'bun test'
+  lint: 'biome check . && oxlint .'
