@@ -188,7 +188,7 @@ projects:
   - 'packages/*'
 
 vcs:
-  manager: 'git'
+  client: 'git'
   defaultBranch: 'main'
 ```
 
@@ -4364,7 +4364,7 @@ projects:
   - 'tools'
 
 vcs:
-  manager: 'git'
+  client: 'git'
   defaultBranch: 'main'
 ```
 
