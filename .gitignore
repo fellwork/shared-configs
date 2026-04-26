@@ -1,12 +1,30 @@
-.history
-dist
-*.log
-*.out
+# bun
+node_modules/
+bun.lockb
+
+# build outputs
+dist/
+.tsbuildinfo
 *.tsbuildinfo
+
+# moon
+.moon/cache/
+.moon/docker/
+
+# editor
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env
 .env
-.cache
-**/turbo-build.log
-**/.turbo
-**/dist/**
-**/node_modules/**
-node_modules
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
