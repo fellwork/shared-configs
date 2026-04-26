@@ -1,0 +1,35 @@
+{
+  "name": "@fellwork/markdownlint-config",
+  "version": "0.1.0",
+  "description": "Shared markdownlint configuration for Fellwork projects.",
+  "keywords": [
+    "markdownlint",
+    "shared-config",
+    "fellwork",
+    "markdown"
+  ],
+  "homepage": "https://github.com/fellwork/shared-configs/tree/main/packages/markdownlint-config#readme",
+  "bugs": {
+    "url": "https://github.com/fellwork/shared-configs/issues"
+  },
+  "license": "MIT",
+  "author": "Fellwork <shane@fellwork.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fellwork/shared-configs.git",
+    "directory": "packages/markdownlint-config"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "markdownlint.json",
+  "files": [
+    "markdownlint.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./markdownlint.json"
+  }
+}
