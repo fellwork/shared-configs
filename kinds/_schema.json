@@ -80,6 +80,36 @@
     "scripts": {
       "type": "object",
       "additionalProperties": { "type": "string" }
+    },
+    "target": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["repo", "package"] },
+      "uniqueItems": true,
+      "description": "Where this kind can be created: as a top-level repo, an in-monorepo package, or both."
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": { "type": "array", "items": { "type": "string" } },
+        "optional": { "type": "array", "items": { "type": "string" } }
+      },
+      "description": "Template variables foreman provides."
+    },
+    "hooks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "postInit": { "type": "array", "items": { "type": "string" } },
+        "postSync": { "type": "array", "items": { "type": "string" } },
+        "timeout": { "type": "integer", "minimum": 1 }
+      },
+      "description": "Foreman lifecycle hooks."
+    },
+    "packagePaths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Where in-repo packages can live (for monorepo kinds)."
     }
   }
 }
