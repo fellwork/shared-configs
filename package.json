@@ -1,8 +1,35 @@
 {
-  "name": "shared-configs",
+  "name": "@fellwork/shared-configs",
+  "version": "1.0.0",
   "description": "Canonical home for shared developer configs across the Fellwork ecosystem",
-  "private": true,
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./kinds": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./templates": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./manifest-schema": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "kinds",
+    "templates",
+    "!templates/**/*.tmpl.types.ts"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "workspaces": [
     "packages/*"
   ],
@@ -10,6 +37,8 @@
     "bun": ">=1.1.0"
   },
   "scripts": {
+    "build": "rolldown -c",
+    "prepack": "bun run build",
     "ci": "moon run :ci",
     "release": "moon run :release",
     "changeset": "changeset",
