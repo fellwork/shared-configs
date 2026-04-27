@@ -21,7 +21,7 @@ templates:
   - vscode/
   - claude/
   - rust/
-  - bunfig.toml
+  - bunfig.toml.tmpl
   - 'README.md.tmpl@polyglot'
   - dependabot.yml
 
