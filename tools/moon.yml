@@ -15,10 +15,10 @@ tasks:
       - '*.ts'
 
   validate-kinds:
-    command: 'bun run validate-kinds.ts'
+    command: 'bun validate-kinds.ts'
     inputs:
-      - '../kinds/**/*.yaml'
-      - '../kinds/_schema.json'
+      - '/kinds/**/*.yaml'
+      - '/kinds/_schema.json'
       - 'validate-kinds.ts'
 
   ci:
