@@ -5,14 +5,16 @@ language: 'typescript'
 
 tasks:
   check:
-    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts audit-tools-shape.ts audit-tools-shape.test.ts'
+    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts audit-tools-shape.ts audit-tools-shape.test.ts lib/discover-packages.ts lib/discover-packages.test.ts'
     inputs:
       - '*.ts'
+      - 'lib/**/*.ts'
 
   test:
     command: 'bun test'
     inputs:
       - '*.ts'
+      - 'lib/**/*.ts'
 
   validate-kinds:
     command: 'bun validate-kinds.ts'
