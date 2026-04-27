@@ -15,6 +15,8 @@ tasks:
       - 'src/**/*.ts'
       - 'tsconfig.json'
       - 'rolldown.config.ts'
+      - '/packages/tsconfig/node.json'
+      - '/packages/tsconfig/base.json'
     outputs:
       - 'dist/**/*'
 
