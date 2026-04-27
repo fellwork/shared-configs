@@ -5,8 +5,18 @@ tasks:
     command: 'noop'
     deps:
       - '~:check'
+      - '~:build'
       - 'packages.*:check'
       - 'packages.*:test'
+
+  build:
+    command: 'bunx rolldown -c'
+    inputs:
+      - 'src/**/*.ts'
+      - 'tsconfig.json'
+      - 'rolldown.config.ts'
+    outputs:
+      - 'dist/**/*'
 
   check:
     command: 'bunx biome check .'
