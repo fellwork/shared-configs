@@ -9,5 +9,5 @@ export default defineConfig({
     sourcemap: true,
   },
   external: ['node:fs', 'node:path', 'node:url', 'yaml'],
-  plugins: [dts()],
+  plugins: [dts({ sourcemap: true })],
 })
