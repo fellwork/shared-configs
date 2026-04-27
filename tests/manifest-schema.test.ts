@@ -20,3 +20,8 @@ test('manifestSchema is a valid Ajv schema and accepts every shipped manifest', 
   }
   expect(failures).toEqual([])
 })
+
+test('manifestSchema has $schema stripped', () => {
+  // biome-ignore lint/suspicious/noExplicitAny: probing for absence of a key
+  expect((manifestSchema as any).$schema).toBeUndefined()
+})

@@ -20,3 +20,7 @@ test('listTemplates includes README.md.tmpl and excludes *.tmpl.types.ts', () =>
 test('templatesDir is an absolute path ending in `templates`', () => {
   expect(templatesDir).toMatch(/[\\/]templates$/)
 })
+
+test('templatePath rejects paths that escape templatesDir', () => {
+  expect(() => templatePath('../foo')).toThrow(/escapes/)
+})
