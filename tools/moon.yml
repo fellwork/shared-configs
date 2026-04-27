@@ -5,21 +5,37 @@ language: 'typescript'
 
 tasks:
   check:
-    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts'
+    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts audit-tools-shape.ts audit-tools-shape.test.ts trust-audit.ts trust-audit.test.ts lib/discover-packages.ts lib/discover-packages.test.ts'
     inputs:
       - '*.ts'
+      - 'lib/**/*.ts'
 
   test:
     command: 'bun test'
     inputs:
       - '*.ts'
+      - 'lib/**/*.ts'
 
   validate-kinds:
-    command: 'bun run validate-kinds.ts'
+    command: 'bun validate-kinds.ts'
     inputs:
-      - '../kinds/**/*.yaml'
-      - '../kinds/_schema.json'
+      - '/kinds/**/*.yaml'
+      - '/kinds/_schema.json'
       - 'validate-kinds.ts'
+
+  audit-shape:
+    command: 'bun audit-tools-shape.ts'
+    inputs:
+      - '*.ts'
+
+  trust-audit:
+    command: 'bun trust-audit.ts'
+    inputs:
+      - 'trust-audit.ts'
+      - 'lib/discover-packages.ts'
+      - '/package.json'
+      - '/packages/*/package.json'
+      - '/.github/workflows/release.yml'
 
   ci:
     command: 'noop'
@@ -27,3 +43,5 @@ tasks:
       - '~:check'
       - '~:test'
       - '~:validate-kinds'
+      - '~:audit-shape'
+      - '~:trust-audit'

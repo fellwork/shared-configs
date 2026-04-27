@@ -3,11 +3,16 @@
  * validate-kinds — assert all kinds/*.yaml conform to kinds/_schema.json.
  *
  * Exits 0 if all manifests validate; exits 1 with the first error otherwise.
+ *
+ * Exit codes:
+ *   0 - all manifests valid
+ *   1 - one or more manifests failed validation
  */
 
 import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parseArgs } from 'node:util'
 import AjvLib from 'ajv'
 import * as YAML from 'yaml'
 
@@ -20,6 +25,9 @@ const KINDS_DIR = resolve(__dirname, '..', 'kinds')
 const SCHEMA_PATH = join(KINDS_DIR, '_schema.json')
 
 function main(): void {
+  // No CLI flags; parseArgs is here per tools/ convention §2.g
+  parseArgs({ args: process.argv.slice(2), options: {} })
+
   // biome-ignore lint/suspicious/noExplicitAny: Ajv constructor type lost after interop unwrap
   const ajv = new Ajv({ allErrors: true }) as any
   // Strip the $schema field so Ajv doesn't attempt to fetch the meta-schema URI
