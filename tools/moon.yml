@@ -5,7 +5,7 @@ language: 'typescript'
 
 tasks:
   check:
-    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts'
+    command: 'bunx biome check verify-repo-shape.ts verify-repo-shape.test.ts validate-kinds.ts validate-kinds.test.ts audit-tools-shape.ts audit-tools-shape.test.ts'
     inputs:
       - '*.ts'
 
@@ -21,9 +21,15 @@ tasks:
       - '/kinds/_schema.json'
       - 'validate-kinds.ts'
 
+  audit-shape:
+    command: 'bun audit-tools-shape.ts'
+    inputs:
+      - '*.ts'
+
   ci:
     command: 'noop'
     deps:
       - '~:check'
       - '~:test'
       - '~:validate-kinds'
+      - '~:audit-shape'
