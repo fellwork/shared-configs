@@ -13,8 +13,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export const kindsDir: string = resolve(__dirname, '..', 'kinds')
 
 /**
- * List all available kind names (filenames in kinds/ minus `.yaml`,
- * excluding the schema file).
+ * List all available kind names (filenames in kinds/ minus `.yaml`).
+ *
+ * Excludes:
+ *   - non-`.yaml` files (e.g., `_schema.json`)
+ *   - YAML files whose name starts with `_` (reserved for private fragments
+ *     like `_anchors.yaml` that may be added in the future)
  */
 export function listKinds(): string[] {
   return readdirSync(kindsDir)

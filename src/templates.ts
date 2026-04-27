@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, statSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, relative as relativePath, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -16,7 +16,12 @@ export const templatesDir: string = resolve(__dirname, '..', 'templates')
  * Throws if the template does not exist.
  */
 export function templatePath(relative: string): string {
-  const path = join(templatesDir, relative)
+  const path = resolve(templatesDir, relative)
+  // Defensive: refuse paths that escape templatesDir.
+  const rel = relativePath(templatesDir, path)
+  if (rel.startsWith('..') || rel.includes(`..${sep}`)) {
+    throw new Error(`Template path escapes templatesDir: ${relative}`)
+  }
   if (!existsSync(path)) {
     throw new Error(`Template not found: ${relative} (looked in ${templatesDir})`)
   }
