@@ -10,6 +10,11 @@
  *
  * Exits 0 if the repo's shape matches the kind manifest; exits 1 listing
  * missing files otherwise. Does NOT enforce content — only presence.
+ *
+ * Exit codes:
+ *   0 - repo shape matches the kind manifest
+ *   1 - one or more required files are missing
+ *   2 - bad input (--kind missing or kind manifest not found)
  */
 
 import { existsSync, readFileSync } from 'node:fs'

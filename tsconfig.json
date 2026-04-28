@@ -3,6 +3,8 @@
   "extends": "@fellwork/tsconfig/node",
   "compilerOptions": {
     "noEmit": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "allowImportingTsExtensions": true
   },
   "include": [
