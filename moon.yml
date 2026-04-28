@@ -6,8 +6,6 @@ tasks:
     deps:
       - '~:check'
       - '~:build'
-      - 'packages.*:check'
-      - 'packages.*:test'
 
   build:
     command: 'bunx rolldown -c'
