@@ -14,6 +14,47 @@ Three categories of artifact:
 
 Plus **[`kinds/`](./kinds/)** — repo-type manifests that describe which packages, templates, and workflows belong to each kind of repo. This is the integration layer foreman reads.
 
+## Umbrella API
+
+This repo also publishes itself as `@fellwork/shared-configs` — an umbrella
+npm package consumed by [foreman](https://github.com/fellwork/foreman). It
+exports a small library API for reading kind manifests, resolving template
+paths, and validating manifests against the JSON schema.
+
+```ts
+import {
+  loadKind,
+  listKinds,
+  templatePath,
+  listTemplates,
+  manifestSchema,
+  type KindManifest,
+} from '@fellwork/shared-configs'
+
+const kinds = listKinds()                    // ['nuxt-app', 'polyglot', ...]
+const m = loadKind('ts-library')             // KindManifest
+const tmpl = templatePath('README.md.tmpl') // absolute path on disk
+```
+
+The package ships `dist/` (built TypeScript), `kinds/` (raw YAML), and
+`templates/` (raw template files). Adjacent `*.tmpl.types.ts` files are
+excluded from the published payload — they exist for compile-time
+type-checking inside foreman.
+
+### Kind manifest schema (v1)
+
+In addition to the fields documented in `kinds/_schema.json`, v1 adds four
+optional fields foreman consumes:
+
+| Field | Purpose |
+|---|---|
+| `target` | Where this kind can be created (`repo`, `package`, or both) |
+| `context` | Template variables foreman provides (required + optional) |
+| `hooks` | Lifecycle commands run after `init`/`sync` |
+| `packagePaths` | For monorepo kinds: where in-repo packages can live |
+
+All four are optional and additive — existing manifests stay valid.
+
 ## Toolchain
 
 - **bun** — runtime, package manager, publisher

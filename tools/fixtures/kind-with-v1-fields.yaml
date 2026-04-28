@@ -1,0 +1,20 @@
+kind: test-v1-fields
+description: Fixture exercising all v1-additions fields
+target:
+  - repo
+  - package
+context:
+  required:
+    - name
+    - description
+  optional:
+    - author
+hooks:
+  postInit:
+    - 'echo init'
+  postSync:
+    - 'echo sync'
+  timeout: 600
+packagePaths:
+  - packages/
+  - apps/

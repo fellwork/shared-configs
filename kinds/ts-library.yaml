@@ -23,7 +23,7 @@ templates:
   - gitignore/node
   - vscode/
   - claude/
-  - bunfig.toml
+  - bunfig.toml.tmpl
   - 'README.md.tmpl@ts-library'
   - dependabot.yml
 

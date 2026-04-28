@@ -36,6 +36,11 @@ interface KindManifest {
   packages?: { devDependencies?: string[] }
   tsconfig?: { extends?: string[] }
   cargo?: Record<string, unknown>
+  // v1 additions (optional, additive)
+  target?: ('repo' | 'package')[]
+  context?: { required?: string[]; optional?: string[] }
+  hooks?: { postInit?: string[]; postSync?: string[]; timeout?: number }
+  packagePaths?: string[]
 }
 
 function loadKind(kindName: string): KindManifest {
