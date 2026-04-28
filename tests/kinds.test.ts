@@ -1,5 +1,5 @@
-import { test, expect } from 'bun:test'
-import { loadKind, listKinds, kindsDir } from '../src/kinds.ts'
+import { expect, test } from 'bun:test'
+import { kindsDir, listKinds, loadKind } from '../src/kinds.ts'
 
 test('listKinds returns all six v1 kinds, sorted', () => {
   const kinds = listKinds()

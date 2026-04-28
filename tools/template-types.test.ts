@@ -1,8 +1,7 @@
-import { test, expect } from 'bun:test'
+import { expect, test } from 'bun:test'
 import { existsSync, readdirSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { dirname } from 'node:path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = resolve(__dirname, '..', 'templates')

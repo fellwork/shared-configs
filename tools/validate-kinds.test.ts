@@ -21,18 +21,13 @@ describe('validate-kinds', () => {
 })
 
 test('schema accepts all v1-addition fields', () => {
-  const schema = JSON.parse(
-    readFileSync(join(__dirname, '..', 'kinds', '_schema.json'), 'utf8'),
-  )
+  const schema = JSON.parse(readFileSync(join(__dirname, '..', 'kinds', '_schema.json'), 'utf8'))
   delete schema.$schema
   // biome-ignore lint/suspicious/noExplicitAny: ajv interop
   const ajv = new Ajv({ allErrors: true }) as any
   const validate = ajv.compile(schema)
   const fixture = YAML.parse(
-    readFileSync(
-      join(__dirname, 'fixtures', 'kind-with-v1-fields.yaml'),
-      'utf8',
-    ),
+    readFileSync(join(__dirname, 'fixtures', 'kind-with-v1-fields.yaml'), 'utf8'),
   )
   const ok = validate(fixture)
   if (!ok) {

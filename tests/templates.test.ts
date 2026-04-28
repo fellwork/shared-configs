@@ -1,6 +1,6 @@
-import { test, expect } from 'bun:test'
+import { expect, test } from 'bun:test'
 import { existsSync } from 'node:fs'
-import { templatePath, listTemplates, templatesDir } from '../src/templates.ts'
+import { listTemplates, templatePath, templatesDir } from '../src/templates.ts'
 
 test('templatePath resolves an existing template', () => {
   const p = templatePath('README.md.tmpl')

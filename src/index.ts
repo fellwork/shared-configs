@@ -1,4 +1,4 @@
-export { loadKind, listKinds, kindsDir } from './kinds.ts'
-export { templatePath, listTemplates, templatesDir } from './templates.ts'
+export { kindsDir, listKinds, loadKind } from './kinds.ts'
 export { manifestSchema, manifestSchemaPath } from './manifest-schema.ts'
+export { listTemplates, templatePath, templatesDir } from './templates.ts'
 export type { KindManifest } from './types.ts'

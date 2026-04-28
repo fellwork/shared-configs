@@ -1,6 +1,6 @@
-import { test, expect } from 'bun:test'
+import { expect, test } from 'bun:test'
 import AjvLib from 'ajv'
-import { loadKind, listKinds } from '../src/kinds.ts'
+import { listKinds, loadKind } from '../src/kinds.ts'
 import { manifestSchema } from '../src/manifest-schema.ts'
 
 // biome-ignore lint/suspicious/noExplicitAny: CJS interop for Ajv default export
