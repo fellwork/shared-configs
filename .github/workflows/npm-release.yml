@@ -25,10 +25,10 @@ jobs:
         with:
           bun-version: ${{ inputs.bun-version }}
 
-      - name: Setup Node (for npm CLI >= 11.5.1)
+      - name: Setup Node (Node 24 ships npm >= 11 for OIDC publishing)
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Upgrade npm to latest (Node 22 ships npm 10.9.x; OIDC needs 11.5.1+)
