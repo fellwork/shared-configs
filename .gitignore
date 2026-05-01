@@ -28,3 +28,4 @@ Thumbs.db
 # logs
 *.log
 npm-debug.log*
+AGENTS.local.db
